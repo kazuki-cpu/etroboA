@@ -1,22 +1,50 @@
 #include "app.h"
 #include "LineTracer.h"
 #include <stdio.h>
+#define KP 0.5
+#define KI 0
+#define KD 0.01
+#define DELTA_T 0.1
+rgb_raw_t rgb_raw;
+float error[2];
+float integral;
+
+
 
 /* 関数プロトタイプ宣言 */
 static int16_t get_rgb_diff();                                /* 反射光とキャリブレーション値との差を取得*/
 static int calc_rotation(int16_t green_diff);                   /* 旋回量を計算 */
 static void motor_control(int rotation);                        /* 走行モータ制御 */
-static void display_position(int16_t green_diff);               /* 車体位置のグラフィカル表示 */
+static void display_position(int16_t green_diff); 
+float pid_culc(float feedback_val, float target_val);             /* 車体位置のグラフィカル表示 */
 
 /* ライントレースタスク(100msec周期） */
 void tracer_task(intptr_t unused) {
     int16_t green_diff;                                         /* RGB値差分 */
-    int rotation;                                               /* 旋回量 */
-    green_diff = get_rgb_diff();                                  /* RGB値の現在値とキャリブレーション値との差を取得 */
-    rotation = (int)calc_rotation(green_diff);                         /* 旋回量を計算 */
+    int rotation; 
+    ev3_color_sensor_get_rgb_raw(color_sensor, &rgb_raw);                                          /* 旋回量 */
+    //green_diff = rgb_raw.g - rgb_ave.g;                                 /* RGB値の現在値とキャリブレーション値との差を取得 */
+    rotation = (int)pid_culc((float)rgb_raw.g, (float)rgb_ave.g );                         /* 旋回量を計算 */
     motor_control(rotation);                                    /* 走行モータ制御 */
-    display_position(green_diff);                                 /* 車体位置のグラフィカル表示 */
+    //display_position(green_diff);                                 /* 車体位置のグラフィカル表示 */
     ext_tsk();                                                  /* タスク終了 */                                          
+}
+
+float pid_culc(float feedback_val, float target_val)
+{
+
+float p, i, d;
+
+error[0] = error[1];
+error[1] = feedback_val - target_val;
+integral += (error[1] + error[0]) / 2.0 * DELTA_T;
+
+p = KP * error[1];
+i = KI * integral;
+d = KD * (error[1] - error[0])/DELTA_T;
+
+return (p + i + d);
+
 }
 
 /* 反射光とキャリブレーション値との差を取得*/
