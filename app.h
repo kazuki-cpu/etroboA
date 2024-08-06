@@ -33,7 +33,8 @@ static const motor_port_t
 #ifndef TOPPERS_MACRO_ONLY
     extern void main_task(intptr_t exinf);              /* メインタスク(起動時にのみ関数コールされる) */
     extern void tracer_task(intptr_t exinf); 
-    extern void odometry_task(intptr_t exinf); 
+    extern void odometry_task(intptr_t exinf);
+    extern void grid_task(intptr_t exinf); 
 #endif
 
 /* タスク優先度 */
