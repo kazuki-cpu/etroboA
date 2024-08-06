@@ -2,7 +2,7 @@
 #define _GRID_H_
 
 #include "math.h"
-#include "Distance.h"
+#include "Odometry.h"
 static RUN_STATE state = TURN;
  struct GRID_XY target_grid[GRID_NUM] = {{2,5},
                                             {3,3},
