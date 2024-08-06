@@ -40,14 +40,17 @@ static const motor_port_t
 #define MAIN_PRIORITY    (TMIN_APP_TPRI + 1)
 #define ODOMETRY_PRIORITY  (TMIN_APP_TPRI + 2)
 #define TRACER_PRIORITY  (TMIN_APP_TPRI + 2)
+#define GRID_PRIORITY  (TMIN_APP_TPRI + 2)
 
 /* タスク周期 */
 #ifdef ETROBOC_SIM  /* シミュレータ */
     #define TRACER_PERIOD  (10 * 1000 / 0.6 )
     #define ODOMETRY_PERIOD  (10 * 1000 / 0.6 )
+    #define GRID_PERIOD  (10 * 1000 / 0.6 )/*
 #else   /* RasPike実機 */
     #define TRACER_PERIOD  (10 * 1000 )
     #define ODOMETRY_PERIOD  (10 * 1000 )
+    #define GRID_PERIOD  (10 * 1000 )
 #endif
 
 /* 関数のプロトタイプ宣言 */
