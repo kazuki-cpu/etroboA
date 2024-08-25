@@ -32,21 +32,21 @@ static const motor_port_t
 /* タスクのプロトタイプ宣言 */
 #ifndef TOPPERS_MACRO_ONLY
     extern void main_task(intptr_t exinf);              /* メインタスク(起動時にのみ関数コールされる) */
-    extern void tracer_task(intptr_t exinf); 
+    extern void grid_task(intptr_t exinf); 
     extern void odometry_task(intptr_t exinf); 
 #endif
 
 /* タスク優先度 */
 #define MAIN_PRIORITY    (TMIN_APP_TPRI + 1)
 #define ODOMETRY_PRIORITY  (TMIN_APP_TPRI + 2)
-#define TRACER_PRIORITY  (TMIN_APP_TPRI + 2)
+#define GRID_PRIORITY  (TMIN_APP_TPRI + 2)
 
 /* タスク周期 */
 #ifdef ETROBOC_SIM  /* シミュレータ */
-    #define TRACER_PERIOD  (10 * 1000 / 0.6 )
+    #define GRID_PERIOD  (10 * 1000 / 0.6 )
     #define ODOMETRY_PERIOD  (10 * 1000 / 0.6 )
 #else   /* RasPike実機 */
-    #define TRACER_PERIOD  (10 * 1000 )
+    #define GRID_PERIOD  (10 * 1000 )
     #define ODOMETRY_PERIOD  (10 * 1000 )
 #endif
 
@@ -54,7 +54,7 @@ static const motor_port_t
 static void init_global();          /* グローバル変数の初期化 */
 static void port_config();          /* ポート初期設定 */
 void wait_start();           /* 動作開始待ち（シミュレータ：自動またはスペースキーで開始, 実機：BlueToothボタンで開始） */
-static void laptime_tracer();       /* ラップタイム走行 */
+static void debris_removal();       /* デブリ*/
 void wait_msec(int32_t msec);       /* タスク停止関数（ミリ秒） */
 
 #ifdef __cplusplus
