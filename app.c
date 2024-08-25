@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include "app.h"
 #include "Odometry.h"
-#include "Tracer.h"
+#include "Grid.h"
 
 /* グローバル変数 */
 
@@ -12,9 +12,7 @@ void main_task(intptr_t unused){
     //init_global();                  /* グローバル変数の初期化 */
     port_config();                  /* ポート初期設定 */
     wait_start();                   /* 動作開始待ち（シミュレータ：自動またはスペースキーで開始, 実機：BlueToothボタンで開始） */
-    laptime_tracer();               /* ラップタイム走行 */
-                                    /* タブルループNEO */
-                                    /* スマートデブリ */
+    debris_removal();               /* デブリリムーバル */
                                     /* スマートキャリー */
                                     /* 停車処理 */
     ext_tsk();                      /* メインタスク終了 */
@@ -57,12 +55,12 @@ void wait_start(){
 }
 
 /* ラップタイム走行 */
-static void laptime_tracer(){
+static void debris_removal(){
     /* 計測器初期化 */
     odom_Distance_reset();
     odom_Direction_reset();
     Grid_init();
-    sta_cyc(TRACER_TASK_CYC);  /* トレースタスクの起動 */
+    sta_cyc(GRID_TASK_CYC);  /* トレースタスクの起動 */
     sta_cyc(ODOMETRY_TASK_CYC);  /*オドメトリタスクの起動 */
 }
 
