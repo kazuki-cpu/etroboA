@@ -59,7 +59,8 @@ void wait_start(){
 static void laptime_tracer(){
     /* 計測器初期化 */
     odom_Distance_reset();
-    odom_Direction_reset();
+    //odom_Direction_reset();
+    odom_Direction_setDirection();
     sta_cyc(TRACER_TASK_CYC);  /* トレースタスクの起動 */
     sta_cyc(ODOMETRY_TASK_CYC);  /*オドメトリタスクの起動 */
 }
