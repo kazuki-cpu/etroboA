@@ -52,6 +52,9 @@ void tracer_task(intptr_t unused) {
         case END:
             ev3_motor_stop(left_motor, true);
             ev3_motor_stop(right_motor, true);
+            stp_cyc(ODOMETRY_TASK_CYC);
+            wait_msec(1000);
+            sta_cyc(ODOMETRY_TASK_CYC);
             break;
         default:
             break;
