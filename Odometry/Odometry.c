@@ -1,14 +1,17 @@
+#pragma once
+
 #include "app.h"
 #include "Odometry.h"
 #include "ev3api.h"
 //using namespace ev3api;
 
 float angle_diff;
+float direction;
 
 void odometry_task(intptr_t exinf){
     odom_Distance_update();
     odom_Direction_update();
-    printf("distance = %lf, direction= %lf", distance, direction);
+    printf(", distance = %lf, direction= %lf\n", distance, direction);
 }
 /*
 void odom_init(){
@@ -34,12 +37,16 @@ void motor_control(int left_motor_power, int right_motor_power) {
 /* 初期化関数 */
 void odom_Distance_reset(){
     //各変数の値の初期化
+    ev3_motor_reset_counts(left_motor);
+    ev3_motor_reset_counts(right_motor);
     distance = 0.0;
     distanceR = 0.0;
     distanceL = 0.0;
+    wait_msec(100);
     //モータ角度の過去値に現在値を代入
     pre_angleL = ev3_motor_get_counts(left_motor);
     pre_angleR = ev3_motor_get_counts(right_motor);
+    
 }
 
 /* 距離更新(4ms間の移動距離を毎回加算している) */
@@ -48,7 +55,7 @@ void odom_Distance_update(){
     float cur_angleR = ev3_motor_get_counts(right_motor);//右モータ回転角度の現在値
     float cur_angle_diff = cur_angleL - cur_angleR; //Lが強いと正、Rが強いと負
     angle_diff = cur_angle_diff; 
-    printf(", cur_angleL = %lf, cur_angleR = %lf\n", cur_angleL, cur_angleR);
+    printf("cur_angleL = %lf, cur_angleR = %lf, pre_angleL = %lf, pre_angleR = %lf", cur_angleL, cur_angleR, pre_angleL, pre_angleR);
     float distance_dt = 0.0;        //
 
     // 4ms間の走行距離 = ((円周率 * タイヤの直径) / 360) * (モータ角度過去値 - モータ角度現在値)
@@ -80,6 +87,11 @@ float odom_Distance_getDistanceLeft(){
 /* 方位リセット */
 void odom_Direction_reset(){
     direction = 0.0;
+    ev3_motor_reset_counts(left_motor);
+    ev3_motor_reset_counts(right_motor);
+    //モータ角度の過去値に現在値を代入
+    pre_angleL = ev3_motor_get_counts(left_motor);
+    pre_angleR = ev3_motor_get_counts(right_motor); 
 }
 
  /* 方位を取得(右旋回が正転) */
@@ -90,5 +102,11 @@ float odom_Direction_getDirection(){
 /* 方位を更新 */
 void odom_Direction_update(){
     //(360 / (2 * 円周率 * 車体トレッド幅)) * (右進行距離 - 左進行距離)
-    direction += (360.0 / (2.0 * PI * TREAD)) * (odom_Distance_getDistanceLeft() - odom_Distance_getDistanceRight());
+    direction += (360.0 / (2.0 * PI * TREAD)) * (odom_Distance_getDistanceRight() - odom_Distance_getDistanceLeft());
+}
+
+/* 方位を設定 */
+void odom_Direction_setDirection(float set_dir){
+    direction = set_dir;
+    printf("direction = %lf\n", direction);
 }
