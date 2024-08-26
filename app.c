@@ -58,7 +58,8 @@ void wait_start(){
 static void debris_removal(){
     /* 計測器初期化 */
     odom_Distance_reset();
-    odom_Direction_reset();
+    odom_Direction_setDirection(90);
+    //odom_Direction_reset();
     Grid_init();
     sta_cyc(GRID_TASK_CYC);  /* トレースタスクの起動 */
     sta_cyc(ODOMETRY_TASK_CYC);  /*オドメトリタスクの起動 */
