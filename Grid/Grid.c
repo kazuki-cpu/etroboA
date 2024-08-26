@@ -50,7 +50,7 @@ int bias;
 extern float angle_diff;
 extern float direction; //現在の方位
 
-void tracer_task(intptr_t unused) {
+void grid_task(intptr_t unused) {
 
         // 計測器の現在値を格納
         cur_dis = odom_Distance_getDistance();
