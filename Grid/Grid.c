@@ -76,11 +76,11 @@ void grid_task(intptr_t unused) {
         case TURN:
             // 指定方位まで旋回する
             if(cur_dir < target_dir) {
-                ev3_motor_set_power(left_motor, -50 - bias);
-                ev3_motor_set_power(right_motor, 50 + bias);
+                ev3_motor_set_power(left_motor, -55 - bias);
+                ev3_motor_set_power(right_motor, 55 + bias);
             } else {
-                ev3_motor_set_power(left_motor, 50 + bias);
-                ev3_motor_set_power(right_motor, -50 - bias);
+                ev3_motor_set_power(left_motor, 55 + bias);
+                ev3_motor_set_power(right_motor, -55 - bias);
             }
             // 指定方位の一定範囲内に収まったら,移動開始
             if( (cur_dir > (target_dir-1.0)) && (cur_dir < (target_dir+1.0)) ) {;
