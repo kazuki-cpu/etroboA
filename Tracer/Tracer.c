@@ -22,6 +22,7 @@ void tracer_task(intptr_t unused) {
     //odom_Direction_reset();
     if(5 > fabsf(angle_diff)){
             bias = 0;
+            printf("angle_diff=%lf, bias=%lf\n", angle_diff, bias);
     }
     else{
         if(angle_diff>=0){
@@ -31,7 +32,7 @@ void tracer_task(intptr_t unused) {
             bias = 5;
         }
     }
-    printf("angle_diff=%lf, bias=%lf\n", angle_diff, bias);
+    //printf("angle_diff=%lf, bias=%lf\n", angle_diff, bias);
     
     switch(state) {        
         case AHEAD:
