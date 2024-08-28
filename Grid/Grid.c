@@ -89,21 +89,13 @@ void grid_task(intptr_t unused) {
                 wait_msec(50);
                 last_dir = cur_dir;
                 printf("last_dir = cur_dir = %lf\n", cur_dir);
-                //直進移行のためのエンコーダリセット
-                ev3_motor_reset_counts(left_motor);
-                ev3_motor_reset_counts(right_motor);
-                wait_msec(100);
-                //モータ角度の過去値に現在値を代入
-                pre_angleL = 0.0;
-                pre_angleR = 0.0;
-                //pre_angleL = ev3_motor_get_counts(left_motor);//←pre_angleってここでアクセスできんの？
-                //pre_angleR = ev3_motor_get_counts(right_motor);
+                odom_Direction_reset();
                 wait_msec(50);
                 state = MOVE;
+                //最後の方位を代入＆オドメトリタスク再開
+                odom_Direction_setDirection(last_dir);
                 sta_cyc(ODOMETRY_TASK_CYC);
-                //odom_Direction_setDirection(last_dir);//←これこのタイミングでいい？
-                direction = last_dir;
-                wait_msec(50);                                                                
+                                                                               
                 printf("state = MOVE\n");
             }
             break;
