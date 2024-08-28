@@ -20,7 +20,7 @@ void tracer_task(intptr_t unused) {
     /* 計測器初期化 */
     //odom_Distance_reset();
     //odom_Direction_reset();
-    if(5 > abs(angle_diff)){
+    if(5 > fabsf(angle_diff)){
             bias = 0;
         }
         else{
@@ -44,7 +44,7 @@ void tracer_task(intptr_t unused) {
             }
             break;
         case TURN:
-            ev3_motor_set_power(left_motor, -65 - bias);//64,61,58,55
+            ev3_motor_set_power(left_motor, -50 - bias);//64,61,58,55
             ev3_motor_set_power(right_motor, 50 + bias);//40,37,34,31
             if(odom_Direction_getDirection() > 90.0) {;
                 state = END;
