@@ -22,12 +22,12 @@ void tracer_task(intptr_t unused) {
     //odom_Direction_reset();
     if(fabsf(angle_diff) < 5){
             bias = 0;
-            printf("angle_diff=%lf, bias=%lf\n", angle_diff, bias);
+            printf("angle_diff=%lf, bias=%d\n", angle_diff, bias);
     }
     else{
         if(angle_diff>=0){
                 bias = -5;
-                printf("angle_diff=%lf, bias=%lf\n", angle_diff, bias);
+                printf("angle_diff=%lf, bias=%d\n", angle_diff, bias);
         }
         else{
             bias = 5;
