@@ -59,7 +59,7 @@ void grid_task(intptr_t unused) {
         cur_dir = odom_Direction_getDirection();
         float last_dir;
     
-        if(5 > fabsf(angle_diff)){
+        if(fabsf(angle_diff) < 5){
             bias = 0;
         }
         else{
@@ -70,17 +70,17 @@ void grid_task(intptr_t unused) {
                 bias = 5;
             }
         }
-        printf("angle_diff=%lf, bias=%lf\n", angle_diff, bias);
+        printf("angle_diff=%lf, bias=%d\n", angle_diff, bias);
     
         switch(state) {
         case TURN:
             // 指定方位まで旋回する
             if(cur_dir < target_dir) {
-                ev3_motor_set_power(left_motor, -69);
-                ev3_motor_set_power(right_motor, 55);
+                ev3_motor_set_power(left_motor, -50 - bias);
+                ev3_motor_set_power(right_motor, 50 + bias);
             } else {
-                ev3_motor_set_power(left_motor, 69);
-                ev3_motor_set_power(right_motor, -55);
+                ev3_motor_set_power(left_motor, 50 + bias);
+                ev3_motor_set_power(right_motor, -50 - bias);
             }
             // 指定方位の一定範囲内に収まったら,移動開始
             if( (cur_dir > (target_dir-1.0)) && (cur_dir < (target_dir+1.0)) ) {;
