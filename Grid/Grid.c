@@ -59,7 +59,7 @@ void grid_task(intptr_t unused) {
         cur_dir = odom_Direction_getDirection();
         float last_dir;
     
-        if(5 > abs(angle_diff)){
+        if(5 > fabsf(angle_diff)){
             bias = 0;
         }
         else{
