@@ -27,6 +27,7 @@ void tracer_task(intptr_t unused) {
     else{
         if(angle_diff>=0){
                 bias = -5;
+                printf("angle_diff=%lf, bias=%lf\n", angle_diff, bias);
         }
         else{
             bias = 5;
