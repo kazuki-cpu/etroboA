@@ -32,9 +32,9 @@ void tracer_task(intptr_t unused) {
         else{
             bias = 5;
         }
-        printf("angle_diff=%lf, bias=%lf\n", angle_diff, bias);
+        printf("angle_diff=%lf, bias=%d\n", angle_diff, bias);
     }
-    //printf("angle_diff=%lf, bias=%lf\n", angle_diff, bias);
+    printf("angle_diff=%lf, bias=%d\n", angle_diff, bias);
     
     switch(state) {        
         case AHEAD:
