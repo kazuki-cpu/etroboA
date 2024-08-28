@@ -20,7 +20,7 @@ void tracer_task(intptr_t unused) {
     /* 計測器初期化 */
     //odom_Distance_reset();
     //odom_Direction_reset();
-    if(5 > fabsf(angle_diff)){
+    if(fabsf(angle_diff) < 5){
             bias = 0;
             printf("angle_diff=%lf, bias=%lf\n", angle_diff, bias);
     }
