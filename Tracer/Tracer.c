@@ -31,6 +31,7 @@ void tracer_task(intptr_t unused) {
                 bias = 5;
             }
         }
+    printf("bias=%lf\n", bias);
     
     switch(state) {        
         case AHEAD:
