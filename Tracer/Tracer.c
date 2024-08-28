@@ -34,7 +34,7 @@ void tracer_task(intptr_t unused) {
         }
         //printf("angle_diff=%lf, bias=%d\n", angle_diff, bias);
     }
-    //printf("angle_diff=%lf, bias=%d\n", angle_diff, bias);
+    printf("angle_diff=%lf, bias=%d\n", angle_diff, bias);
     
     switch(state) {        
         case AHEAD:
