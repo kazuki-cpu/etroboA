@@ -85,11 +85,12 @@ float odom_Distance_getDistanceLeft(){
 }
 
 /* 方位リセット */
-void odom_Direction_reset(){
-    direction = 0.0;
+void odom_Direction_reset(){    
     ev3_motor_reset_counts(left_motor);
     ev3_motor_reset_counts(right_motor);
+    direction = 0.0;
     //モータ角度の過去値に現在値を代入
+    wait_msec(100);
     pre_angleL = ev3_motor_get_counts(left_motor);
     pre_angleR = ev3_motor_get_counts(right_motor); 
 }
