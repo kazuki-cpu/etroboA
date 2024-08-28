@@ -20,7 +20,7 @@
 #endif
 
 // 構造体に格納されている目標座標の数
-#define GRID_NUM 4
+#define GRID_NUM 6
 #define GRID_SIZE 352.0 //座標のマス幅（352mm）
 
 /**
@@ -40,8 +40,10 @@ struct GRID_XY {
 };
  struct GRID_XY target_grid[GRID_NUM] = {{0,1},
                                             {1,1},
-                                            {1,2},
-                                            {0,2} };
+                                            {2,1},
+                                            {2,2},
+                                            {2,3},
+                                            {3,3} };
 
 static float grid_distance = 0.0; //現在座標から目標座標までの距離
 static float grid_direction = 0.0;//現在座標から目標座標の方位
