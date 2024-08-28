@@ -94,9 +94,11 @@ void grid_task(intptr_t unused) {
                 ev3_motor_reset_counts(right_motor);
                 wait_msec(100);
                 //モータ角度の過去値に現在値を代入
-                pre_angleL = ev3_motor_get_counts(left_motor);
-                pre_angleR = ev3_motor_get_counts(right_motor);
-                wait_msec(1000);
+                pre_angleL = 0.0;
+                pre_angleR = 0.0;
+                //pre_angleL = ev3_motor_get_counts(left_motor);//←pre_angleってここでアクセスできんの？
+                //pre_angleR = ev3_motor_get_counts(right_motor);
+                wait_msec(50);
                 state = MOVE;
                 sta_cyc(ODOMETRY_TASK_CYC);
                 //odom_Direction_setDirection(last_dir);//←これこのタイミングでいい？
