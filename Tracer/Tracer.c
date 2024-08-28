@@ -61,3 +61,34 @@ void tracer_task(intptr_t unused) {
     }
 }
 
+/* シーン状態とエッジ状態の遷移関数 */
+static void white_count(enum SCENE_STATE *scene_state, enum EDGE_STATE *edge_state, int16_t s, int16_t v){
+    switch(*edge_state){
+        case EDGE_BLUE:                             /* 青線走行状態 */
+            if(s < S_COLORFUL && v > V_DARK){       /* 白線を検知したら */
+                *edge_state = EDGE_WHITE;               /* 次の走行状態に遷移 */
+            }
+            break;
+        case EDGE_WHITE:                            /* 黒線走行状態 */
+            if(s > S_AVERAGE && v > V_DARK){       /* 青線を検知したら */
+                *edge_state = END;             /* 次の走行状態に遷移 */
+            }
+            else{
+                white_count++;
+            }
+        case END:
+               if(white_count>10){
+                   bias_grid.gridX=;
+                   bias_grid.gridY=;
+                   diretion =
+               }
+               else if(){
+
+               }        
+            break;
+        default:
+            break;
+    }
+    printf("scene=%s, ",scene_param[*scene_state].current_scene);     /* シーン状態の表示 */
+    printf("edge=%s, \n",edge_table[*edge_state].current_edge);           /* エッジ状態の表示 */
+}
