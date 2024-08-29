@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include "app.h"
+#include "Calibration.h"
 #include "Odometry.h"
 
 /* グローバル変数 */
@@ -11,6 +12,9 @@ void main_task(intptr_t unused){
     //init_global();                  /* グローバル変数の初期化 */
     port_config();                  /* ポート初期設定 */
     wait_start();                   /* 動作開始待ち（シミュレータ：自動またはスペースキーで開始, 実機：BlueToothボタンで開始） */
+    wait_msec(1000);
+    calibration(false);     /* キャリブレーション（true:実行、false:スキップ） */
+    wait_msec(1000);
     laptime_tracer();               /* ラップタイム走行 */
                                     /* タブルループNEO */
                                     /* スマートデブリ */
