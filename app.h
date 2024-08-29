@@ -34,6 +34,7 @@ static const motor_port_t
     extern void main_task(intptr_t exinf);  /* メインタスク(起動時にのみ関数コールされる) */
     extern void v_sensor_calib_task(intptr_t unused);   /* 光センサV値キャリブレーションタスク）(10msec周期) */
     extern void s_sensor_calib_task(intptr_t unused);   /* 光センサS値キャリブレーションタスク）(10msec周期) */
+    extern void h_sensor_calib_task(intptr_t unused);   /* 光センサH値キャリブレーションタスク）(10msec周期) */
     extern void tracer_task(intptr_t exinf); 
     extern void odometry_task(intptr_t exinf); 
 #endif
@@ -42,6 +43,7 @@ static const motor_port_t
 #define MAIN_PRIORITY    (TMIN_APP_TPRI + 1)
 #define V_CALIB_PRIORITY  (TMIN_APP_TPRI + 2)
 #define S_CALIB_PRIORITY  (TMIN_APP_TPRI + 2)
+#define H_CALIB_PRIORITY  (TMIN_APP_TPRI + 2)
 #define ODOMETRY_PRIORITY  (TMIN_APP_TPRI + 2)
 #define TRACER_PRIORITY  (TMIN_APP_TPRI + 2)
 
@@ -49,11 +51,13 @@ static const motor_port_t
 #ifdef ETROBOC_SIM  /* シミュレータ */
     #define V_CALIB_PERIOD  (10 * 1000 / 0.6 )
     #define S_CALIB_PERIOD  (10 * 1000 / 0.6 )
+    #define H_CALIB_PERIOD  (10 * 1000 / 0.6 )
     #define TRACER_PERIOD  (10 * 1000 / 0.6 )
     #define ODOMETRY_PERIOD  (10 * 1000 / 0.6 )
 #else   /* RasPike実機 */
     #define V_CALIB_PERIOD  (10 * 1000 )
     #define S_CALIB_PERIOD  (10 * 1000 )
+    #define H_CALIB_PERIOD  (10 * 1000 )
     #define TRACER_PERIOD  (1 * 1000 )
     #define ODOMETRY_PERIOD  (1 * 1000 )
 #endif
