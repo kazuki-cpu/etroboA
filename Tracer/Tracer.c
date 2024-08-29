@@ -5,22 +5,20 @@
 
 
 typedef enum {
-    AHEAD,
-    TURN,
+    BLUE,
+    WHITE,
     END
-} RUN_STATE;
+} DETECT_H_STATE;
+static RUN_STATE state = BLUE;
 
 int bias;
 extern float angle_diff;
 
 void tracer_task(intptr_t unused) {
-    //static RUN_STATE state = AHEAD;
-    static RUN_STATE state = TURN;
 
     /* 計測器初期化 */
-    //odom_Distance_reset();
-    //odom_Direction_reset();
-    if(5 > abs(angle_diff)){
+
+    if(fabsf(angle_diff) < 5){
             bias = 0;
         }
         else{
@@ -35,7 +33,7 @@ void tracer_task(intptr_t unused) {
     switch(state) {        
         case AHEAD:
             //左右車輪駆動
-            ev3_motor_set_power(left_motor, 45 + bias);//53
+            ev3_motor_set_power(left_motor, 45 + bias);
             ev3_motor_set_power(right_motor, 45 - bias);
             //1000mm以上前進したら，次状態遷移
             if(odom_Distance_getDistance() > 1000.0) {
