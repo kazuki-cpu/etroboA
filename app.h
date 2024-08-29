@@ -31,21 +31,29 @@ static const motor_port_t
 
 /* タスクのプロトタイプ宣言 */
 #ifndef TOPPERS_MACRO_ONLY
-    extern void main_task(intptr_t exinf);              /* メインタスク(起動時にのみ関数コールされる) */
+    extern void main_task(intptr_t exinf);  /* メインタスク(起動時にのみ関数コールされる) */
+    extern void v_sensor_calib_task(intptr_t unused);   /* 光センサV値キャリブレーションタスク）(10msec周期) */
+    extern void s_sensor_calib_task(intptr_t unused);   /* 光センサS値キャリブレーションタスク）(10msec周期) */
     extern void tracer_task(intptr_t exinf); 
     extern void odometry_task(intptr_t exinf); 
 #endif
 
 /* タスク優先度 */
 #define MAIN_PRIORITY    (TMIN_APP_TPRI + 1)
+#define V_CALIB_PRIORITY  (TMIN_APP_TPRI + 2)
+#define S_CALIB_PRIORITY  (TMIN_APP_TPRI + 2)
 #define ODOMETRY_PRIORITY  (TMIN_APP_TPRI + 2)
 #define TRACER_PRIORITY  (TMIN_APP_TPRI + 2)
 
 /* タスク周期 */
 #ifdef ETROBOC_SIM  /* シミュレータ */
+    #define V_CALIB_PERIOD  (10 * 1000 / 0.6 )
+    #define S_CALIB_PERIOD  (10 * 1000 / 0.6 )
     #define TRACER_PERIOD  (10 * 1000 / 0.6 )
     #define ODOMETRY_PERIOD  (10 * 1000 / 0.6 )
 #else   /* RasPike実機 */
+    #define V_CALIB_PERIOD  (10 * 1000 )
+    #define S_CALIB_PERIOD  (10 * 1000 )
     #define TRACER_PERIOD  (1 * 1000 )
     #define ODOMETRY_PERIOD  (1 * 1000 )
 #endif
@@ -55,7 +63,9 @@ static void init_global();          /* グローバル変数の初期化 */
 static void port_config();          /* ポート初期設定 */
 void wait_start();           /* 動作開始待ち（シミュレータ：自動またはスペースキーで開始, 実機：BlueToothボタンで開始） */
 static void laptime_tracer();       /* ラップタイム走行 */
+void calibration(bool_t skip);
 void wait_msec(int32_t msec);       /* タスク停止関数（ミリ秒） */
+void check_stop_botton();
 
 #ifdef __cplusplus
 }
