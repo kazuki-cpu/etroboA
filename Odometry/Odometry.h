@@ -27,8 +27,11 @@ typedef struct{
   void odom_Direction_reset();
   float odom_Direction_getDirection();
   static void odom_Direction_update();
-
   void odom_Direction_setDirection(float set_dir);
+  void odom_Coordinate_reset();
+  void odom_Coordinate_getCoordinate();
+  static ODOM_XY odom_Coordinate_update();
+  void odom_Direction_setCoordinate(float set_x, float set_y);
 
 
 /* モーターポートの定義 */
