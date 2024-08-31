@@ -11,6 +11,7 @@ float direction;
 void odometry_task(intptr_t exinf){
     odom_Distance_update();
     odom_Direction_update();
+    odom_Coordinate_update();
     printf(", distance = %lf, direction= %lf\n", distance, direction);
 }
 /*
@@ -109,4 +110,38 @@ void odom_Direction_update(){
 void odom_Direction_setDirection(float set_dir){
     direction = set_dir;
     printf("direction = %lf\n", direction);
+}
+
+/*座標リセット*/
+void odom_Coordinate_reset(){
+    coordinate.x = 0.0;
+    coordinate.y = 0.0;
+    ev3_motor_reset_counts(left_motor);
+    ev3_motor_reset_counts(right_motor);
+    //モータ角度の過去値に現在値を代入
+    pre_angleL = ev3_motor_get_counts(left_motor);
+    pre_angleR = ev3_motor_get_counts(right_motor);
+}
+
+/*座標取得*/
+void odom_Coordinate_getCoordinate(){
+    return coordinate;
+}
+
+/*座標更新*/
+void odom_Coordinate_update(){
+    if(distance >= 0){
+        coordinate.x += distance * cos(direction);
+        coordinate.y += distance * sin(direction);
+    }
+    else{
+        coordinate.x += distance * cos(direction + 180);
+        coordinate.y += distance * sin(direction + 180);
+    }
+}
+
+/* 座標を設定 */
+void odom_Direction_setDirection(float set_x, float set_y){
+    coordinate.X = set_x;
+    coordinate.Y = set_y;
 }
