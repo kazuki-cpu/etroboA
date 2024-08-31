@@ -57,13 +57,15 @@ void odom_Distance_update(){
     float cur_angle_diff = fabsf(cur_angleL) - fabsf(cur_angleR); //Lが強いと正、Rが強いと負
     angle_diff = cur_angle_diff; 
     printf("cur_angleL = %lf, cur_angleR = %lf, pre_angleL = %lf, pre_angleR = %lf", cur_angleL, cur_angleR, pre_angleL, pre_angleR);
-    float distance_dt = 0.0;        //
+    //float distance_dt = 0.0;
+    distance_dt = 0.0;//ローカル変数からodomメンバ関数へ
 
     // 4ms間の走行距離 = ((円周率 * タイヤの直径) / 360) * (モータ角度過去値 - モータ角度現在値)
     distanceL = ((PI * TIRE_DIAMETER) / 360.0) * (cur_angleL - pre_angleL);  // 左モータ距離
     distanceR = ((PI * TIRE_DIAMETER) / 360.0) * (cur_angleR - pre_angleR);  // 右モータ距離
     distance_dt = (distanceL + distanceR) / 2.0; //左右タイヤの走行距離を足して割る
     distance += distance_dt;
+    
 
     //モータの回転角度の過去値を更新
     pre_angleL = cur_angleL;
@@ -130,13 +132,13 @@ void odom_Coordinate_getCoordinate(){
 
 /*座標更新*/
 void odom_Coordinate_update(){
-    if(distance >= 0){
-        coordinate.x += distance * cos(direction);
-        coordinate.y += distance * sin(direction);
+    if(distance_dt >= 0){
+        coordinate.x += distance_dt * cos(direction);
+        coordinate.y += distance_dt * sin(direction);
     }
     else{
-        coordinate.x += distance * cos(direction + 180);
-        coordinate.y += distance * sin(direction + 180);
+        coordinate.x += distance_dt * cos(direction + 180);
+        coordinate.y += distance_dt * sin(direction + 180);
     }
 }
 
