@@ -42,6 +42,7 @@ typedef struct{
 */
 
    static float distance;
+   static float distance_dt;
    static float distanceR;
    static float distanceL;
    //static float cur_angleL;
