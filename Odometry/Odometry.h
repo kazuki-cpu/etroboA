@@ -9,6 +9,11 @@ extern "C" {
 #define TREAD 127.0
 #define TIRE_DIAMETER 100.0
 
+typedef struct{
+    int X;
+    int Y;
+}ODOM_XY;
+
 //public:
   void odom_init(); //コンストラクタ
 
@@ -41,6 +46,7 @@ extern "C" {
    static float pre_angleL;
    static float pre_angleR;
    //extern float direction; //現在の方位
+   static ODOM_XY coordinate;
 
 //private:
 
