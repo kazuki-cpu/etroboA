@@ -11,6 +11,8 @@ static float target_dis = 0.0; // 現在位置座標から目標座標までの�
 static float cur_dir = 0.0; // 方位計の現在値
 static float cur_dis = 0.0; // 距離計の現在値
 static int grid_count = 0;  // 目標座標構造体への参照カウンタ
+static float noiseX;
+static float noiseY;
 
 /* 初期化関数 */
 void Grid_init();
@@ -23,6 +25,8 @@ float Grid_getDistance();
 void Grid_setDirection(int aX, int aY, int bX, int bY);
 /* 目標座標の方位を取得する関数 */
 float Grid_getDirection();
+
+void Grid_noiseXY_calc();
 
 #ifdef __cplusplus
 }
