@@ -108,13 +108,15 @@ void grid_task(intptr_t unused) {
 
             // 指定位置までたどり着いたら状態遷移
             if( (cur_dis > target_dis)  && (grid_count < (GRID_NUM-1)) ) {
+                //motorをストップ
+                ev3_motor_stop(left_motor, true);
+                ev3_motor_stop(right_motor, true);
+                //座標到達時の誤差計算
+                Grid_noiseXY_calc();
                 // 現在位置座標を更新
                 cur_gridX = target_grid[grid_count].gridX;
                 cur_gridY = target_grid[grid_count].gridY;
                 /* 計測器情報のリセット */
-                //motorをストップ
-                ev3_motor_stop(left_motor, true);
-                ev3_motor_stop(right_motor, true);
                 //一旦オドメトリタスクをストップ&待ち
                 stp_cyc(ODOMETRY_TASK_CYC);
                 wait_msec(50);
@@ -165,7 +167,10 @@ void Grid_init() {
 
 /* 座標aから座標bまでの移動距離を設定する関数 */
 void Grid_setDistance(int aX, int aY, int bX, int bY) {
-    grid_distance = sqrt( pow((float)(bX-aX),2) + pow((float)(bY-aY),2) ) *  GRID_SIZE;
+    //grid_distance = sqrt( pow((float)(bX-aX),2) + pow((float)(bY-aY),2) ) *  GRID_SIZE;
+    grid_distanceX = (float)(bX-aX)* GRID_SIZE;
+    grid_distanceY = (float)(bY-aY)* GRID_SIZE;
+    grid_distance = sqrt( pow(grid_distanceX,2) + pow((grid_distanceY,2);
 }
 
 /* 座標aから座標bまでの移動距離を取得する関数 */
@@ -191,3 +196,9 @@ float Grid_getDirection() {
     printf("%lf\n", grid_direction);
     return grid_direction;
 }
+
+void Grid_noiseXY_calc() {
+    noiseX = grid_distanceX - odom_Coordinate_getnoiseX();
+    noiseY = grid_distanceY - odom_Coordinate_getnoiseY();
+}
+ 
