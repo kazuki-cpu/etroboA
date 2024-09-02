@@ -50,6 +50,7 @@ static float grid_distanceX = 0,0;
 static float grid_distanceY = 0,0;
 static float grid_direction = 0.0;//現在座標から目標座標の方位
 
+int edge = 1;
 int bias;
 extern float angle_diff;
 extern float direction; //現在の方位
@@ -75,25 +76,28 @@ void grid_task(intptr_t unused) {
         }
         printf("angle_diff=%lf, bias=%d\n", angle_diff, bias);
         */
-        Grid_setMotorBias();//↑/**/関数化
+        Grid_setBias();//↑/**/関数化
 
         switch(state) {
         case TURN:
             // 指定方位まで旋回する
             if(cur_dir < target_dir) {
-                ev3_motor_set_power(left_motor, -53 - bias);
-                ev3_motor_set_power(right_motor, 53 + bias);
+                //ev3_motor_set_power(left_motor, -53 - bias);
+                //ev3_motor_set_power(right_motor, 53 + bias);
+                Grid_steerTurn_P();
             } else {
-                ev3_motor_set_power(left_motor, 53 + bias);
-                ev3_motor_set_power(right_motor, -53 - bias);
+                //ev3_motor_set_power(left_motor, 53 + bias);
+                //ev3_motor_set_power(right_motor, -53 - bias);
+                Grid_steerTurn_N();
             }
             // 指定方位の一定範囲内に収まったら,移動開始
             if( (cur_dir > (target_dir-1.0)) && (cur_dir < (target_dir+1.0)) ) {;
                 last_dir = cur_dir;
                                                                                
                 //motorをストップ
-                ev3_motor_stop(left_motor, true);
-                ev3_motor_stop(right_motor, true);
+                //ev3_motor_stop(left_motor, true);
+                //ev3_motor_stop(right_motor, true);
+                Grid_steerStop();                                                                
                 /*
                 //一旦オドメトリタスクをストップ&待ち
                 stp_cyc(ODOMETRY_TASK_CYC);
@@ -114,16 +118,18 @@ void grid_task(intptr_t unused) {
             }
             break;
         case MOVE:
-            ev3_motor_set_power(left_motor, 45 + bias);
-            ev3_motor_set_power(right_motor, 45 - bias);
+            //ev3_motor_set_power(left_motor, 45 + bias);
+            //ev3_motor_set_power(right_motor, 45 - bias);
+            Grid_steerAhead();
 
             // 指定位置までたどり着いたら状態遷移
             if( (cur_dis > target_dis)  && (grid_count < (GRID_NUM-1)) ) {
                 last_dir = cur_dir;
                 
                 //motorをストップ
-                ev3_motor_stop(left_motor, true);
-                ev3_motor_stop(right_motor, true);
+                //ev3_motor_stop(left_motor, true);
+                //ev3_motor_stop(right_motor, true);
+                Grid_steerStop();  
                 //座標到達時の誤差計算
                 Grid_noiseXY_calc();
                 // 現在位置座標を更新
@@ -165,8 +171,9 @@ void grid_task(intptr_t unused) {
             break;
         case END:
             // モータを停止
-            ev3_motor_stop(left_motor, true);
-            ev3_motor_stop(right_motor, true);
+            //ev3_motor_stop(left_motor, true);
+            //ev3_motor_stop(right_motor, true);
+            Grid_steerStop();  
             break;
         default:
             break;
@@ -222,7 +229,7 @@ void Grid_noiseXY_calc() {
     noiseY = grid_distanceY - odom_Coordinate_getnoiseY();
 }
 
-void Grid_setMotorBias(){
+void Grid_setBias(){
     if(fabsf(angle_diff) < 5){
         bias = 0;
     }
@@ -235,4 +242,24 @@ void Grid_setMotorBias(){
         }
     }
     printf("angle_diff=%lf, bias=%d\n", angle_diff, bias);
+}
+
+void Grid_steerAhead(){
+    ev3_motor_set_power(left_motor, 45 + bias);
+    ev3_motor_set_power(right_motor, 45 - bias);
+}
+
+void Grid_steerTurn_P(){
+    ev3_motor_set_power(left_motor, (-53 - bias) * edge);
+    ev3_motor_set_power(right_motor, (53 + bias) * edge);
+}
+
+void Grid_steerTurn_N(){
+    ev3_motor_set_power(left_motor, (53 + bias) * edge);
+    ev3_motor_set_power(right_motor, (-53 - bias) * edge);
+}
+
+void Grid_steerStop(){
+    ev3_motor_stop(left_motor, true);
+    ev3_motor_stop(right_motor, true);
 }
