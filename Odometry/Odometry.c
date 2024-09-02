@@ -147,3 +147,29 @@ void odom_Direction_setDirection(float set_x, float set_y){
     coordinate.X = set_x;
     coordinate.Y = set_y;
 }
+
+odom_Distance_resetSync(float handover_dir){   
+    //一旦オドメトリタスクをストップ&待ち
+    stp_cyc(ODOMETRY_TASK_CYC);
+    wait_msec(50);
+    
+    // 距離値リセット
+    odom_Distance_reset();
+
+    // 再度,オドメトリタスク開始
+    sta_cyc(ODOMETRY_TASK_CYC);
+    odom_Direction_setDirection(handover_dir);
+    wait_msec(50);
+}
+
+odom_Direction_resetSync(handover_dir){
+    //一旦オドメトリタスクをストップ&待ち
+    stp_cyc(ODOMETRY_TASK_CYC);
+    wait_msec(50);
+    odom_Direction_reset();
+    wait_msec(50);
+
+    //最後の方位を代入＆オドメトリタスク再開
+    odom_Direction_setDirection(handover_dir);
+    sta_cyc(ODOMETRY_TASK_CYC);
+}
