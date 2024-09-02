@@ -1,21 +1,25 @@
 #pragma once
 #include "app.h"
+#include "Color.h"
 #include "Odometry.h"
 #include "Tracer.h"
 
-
 typedef enum {
-    BLUE,
     WHITE,
-    END
-} DETECT_H_STATE;
-static RUN_STATE state = BLUE;
+    BLACK,
+    EDGE,
+    MIDDLE,
+    BLUE,
+    CENTER
+} DETECT_TARGET;
+static DETECT_TARGET target = WHITE;
 
 int bias;
 extern float angle_diff;
 
 void tracer_task(intptr_t unused) {
-
+    color_update();
+    
     /* 計測器初期化 */
 
     if(fabsf(angle_diff) < 5){
@@ -30,51 +34,80 @@ void tracer_task(intptr_t unused) {
             }
         }
     
-    switch(state) {        
-        case AHEAD:
-            //左右車輪駆動
-            ev3_motor_set_power(left_motor, 45 + bias);
-            ev3_motor_set_power(right_motor, 45 - bias);
-            //1000mm以上前進したら，次状態遷移
-            if(odom_Distance_getDistance() > 1000.0) {
-                state = END;
+    switch(target) {        
+        case WHITE:
+            int16_t v = color_get_v();
+            int16_t v_ave = color_get_v_ave();
+            if(v > v_ave) {
+                target = BLACK;
+            }
+            else{
+                ev3_motor_set_power(left_motor, -53 - bias);
+                ev3_motor_set_power(right_motor, 53 + bias);
             }
             break;
-        case TURN:
-            ev3_motor_set_power(left_motor, -69 - bias);//64,61,58,55
-            ev3_motor_set_power(right_motor, 55 + bias);//40,37,34,31
-            if(odom_Direction_getDirection() > 90.0) {;
-                state = END;
+        case BLACK:
+            if(v < v_ave) {;
+                target = EDGE;
+                sta_cyc(ODOMETRY_TASK_CYC);
+            }
+            else{
+                ev3_motor_set_power(left_motor, 53 + bias);
+                ev3_motor_set_power(right_motor, -53 - bias);
             }
             break;
-        case END:
-            ev3_motor_stop(left_motor, true);
-            ev3_motor_stop(right_motor, true);
-            stp_cyc(ODOMETRY_TASK_CYC);
-            wait_msec(1000);
-            sta_cyc(ODOMETRY_TASK_CYC);
-            break;
-        default:
-            break;
-    }
-}
-
-/* シーン状態とエッジ状態の遷移関数 */
-static void white_count(enum SCENE_STATE *scene_state, enum EDGE_STATE *edge_state, int16_t s, int16_t v){
-    switch(*edge_state){
-        case EDGE_BLUE:                             /* 青線走行状態 */
-            if(s < S_COLORFUL && v > V_DARK){       /* 白線を検知したら */
-                *edge_state = EDGE_WHITE;               /* 次の走行状態に遷移 */
+        case EDGE:
+            if(v > v_ave) {
+                target = MIDDLE;
+                ev3_motor_stop(left_motor, true);
+                ev3_motor_stop(right_motor, true);
+                stp_cyc(ODOMETRY_TASK_CYC);
+                float detected_dir = Direction_calc();
+                odom_Direction_setDirection(detected_dir);
+                sta_cyc(ODOMETRY_TASK_CYC);
+            }
+            else{
+                ev3_motor_set_power(left_motor, 45 + bias);
+                ev3_motor_set_power(right_motor, 45 - bias);
             }
             break;
-        case EDGE_WHITE:                            /* 黒線走行状態 */
+        case MIDDLE:                             /* 青線走行状態 */
+            if(odom_Direction_getDirection() < 90.0) {
+                ev3_motor_set_power(left_motor, -53 - bias);
+                ev3_motor_set_power(right_motor, 53 + bias);
+            } else {
+                ev3_motor_set_power(left_motor, 53 + bias);
+                ev3_motor_set_power(right_motor, -53 - bias);
+            }
+            // 指定方位の一定範囲内に収まったら,移動開始
+            if( (odom_Direction_getDirection() > (89.0)) && (odom_Direction_getDirection() < (91.0)) ) {;
+                //motorをストップ
+                ev3_motor_stop(left_motor, true);
+                ev3_motor_stop(right_motor, true);
+                //一旦オドメトリタスクをストップ&待ち
+                stp_cyc(ODOMETRY_TASK_CYC);
+                wait_msec(50);
+                last_dir = cur_dir;
+                printf("last_dir = cur_dir = %lf\n", cur_dir);
+                
+                wait_msec(50);
+                state = MOVE;
+                //最後の方位を代入＆オドメトリタスク再開
+                odom_Direction_setDirection(last_dir);
+                sta_cyc(ODOMETRY_TASK_CYC);
+                                                                               
+                printf("state = MOVE\n");
+            }
+            break;
+        case BLUE:                            /* 黒線走行状態 */
             if(s > S_AVERAGE && v > V_DARK){       /* 青線を検知したら */
-                *edge_state = END;             /* 次の走行状態に遷移 */
+                target = CENTER;             /* 次の走行状態に遷移 */
             }
             else{
                 white_count++;
             }
-        case END:
+            break;
+        case CENTER:
                if(white_count>10){
                    bias_grid.gridX=;
                    bias_grid.gridY=;
@@ -89,4 +122,8 @@ static void white_count(enum SCENE_STATE *scene_state, enum EDGE_STATE *edge_sta
     }
     printf("scene=%s, ",scene_param[*scene_state].current_scene);     /* シーン状態の表示 */
     printf("edge=%s, \n",edge_table[*edge_state].current_edge);           /* エッジ状態の表示 */
+}
+
+float Direction_calc(){
+    return arccos(20.0/odom_Distance_getDistance());
 }
