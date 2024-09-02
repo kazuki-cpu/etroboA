@@ -9,6 +9,11 @@ extern "C" {
 #define TREAD 127.0
 #define TIRE_DIAMETER 100.0
 
+typedef struct{
+    int X;
+    int Y;
+}ODOM_XY;
+
 //public:
   void odom_init(); //コンストラクタ
 
@@ -22,9 +27,13 @@ extern "C" {
   void odom_Direction_reset();
   float odom_Direction_getDirection();
   static void odom_Direction_update();
-
   void odom_Direction_setDirection(float set_dir);
-
+  void odom_Coordinate_reset();
+  void odom_Coordinate_getCoordinate();
+  static ODOM_XY odom_Coordinate_update();
+  void odom_Direction_setCoordinate(float set_x, float set_y);
+  void odom_Distance_resetSync(float handover_dir);
+  void odom_Direction_resetSync(float handover_dir);
 
 /* モーターポートの定義 */
 /*motor_port_t
@@ -34,6 +43,7 @@ extern "C" {
 */
 
    static float distance;
+   static float distance_dt;
    static float distanceR;
    static float distanceL;
    //static float cur_angleL;
@@ -41,6 +51,7 @@ extern "C" {
    static float pre_angleL;
    static float pre_angleR;
    //extern float direction; //現在の方位
+   static ODOM_XY coordinate;
 
 //private:
 
