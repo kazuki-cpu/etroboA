@@ -28,6 +28,10 @@ float Grid_getDirection();
 
 void Grid_noiseXY_calc();
 void Grid_setMotorBias();
+void Grid_steerAhead();
+void Grid_steerTurn_P(); 
+void Grid_steerTurn_N();  
+void Grid_steerStop();  
 
 #ifdef __cplusplus
 }
