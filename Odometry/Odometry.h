@@ -32,7 +32,8 @@ typedef struct{
   void odom_Coordinate_getCoordinate();
   static ODOM_XY odom_Coordinate_update();
   void odom_Direction_setCoordinate(float set_x, float set_y);
-
+  void odom_Distance_resetSync(float handover_dir);
+  void odom_Direction_resetSync(float handover_dir);
 
 /* モーターポートの定義 */
 /*motor_port_t
