@@ -60,7 +60,8 @@ void grid_task(intptr_t unused) {
         cur_dis = odom_Distance_getDistance();
         cur_dir = odom_Direction_getDirection();
         float last_dir;
-    
+
+        /*
         if(fabsf(angle_diff) < 5){
             bias = 0;
         }
@@ -73,7 +74,9 @@ void grid_task(intptr_t unused) {
             }
         }
         printf("angle_diff=%lf, bias=%d\n", angle_diff, bias);
-    
+        */
+        Grid_setMotorBias();//↑/**/関数化
+
         switch(state) {
         case TURN:
             // 指定方位まで旋回する
@@ -86,21 +89,27 @@ void grid_task(intptr_t unused) {
             }
             // 指定方位の一定範囲内に収まったら,移動開始
             if( (cur_dir > (target_dir-1.0)) && (cur_dir < (target_dir+1.0)) ) {;
+                last_dir = cur_dir;
+                                                                               
                 //motorをストップ
                 ev3_motor_stop(left_motor, true);
                 ev3_motor_stop(right_motor, true);
+                /*
                 //一旦オドメトリタスクをストップ&待ち
                 stp_cyc(ODOMETRY_TASK_CYC);
                 wait_msec(50);
-                last_dir = cur_dir;
-                printf("last_dir = cur_dir = %lf\n", cur_dir);
+                //last_dir = cur_dir;
+                //printf("last_dir = cur_dir = %lf\n", cur_dir);
                 odom_Direction_reset();
                 wait_msec(50);
-                state = MOVE;
+                //state = MOVE;
                 //最後の方位を代入＆オドメトリタスク再開
                 odom_Direction_setDirection(last_dir);
                 sta_cyc(ODOMETRY_TASK_CYC);
-                                                                               
+                */
+                odom_Direction_resetSync(last_dir);//↑/**/関数化
+                
+                state = MOVE;                                                               
                 printf("state = MOVE\n");
             }
             break;
@@ -110,6 +119,8 @@ void grid_task(intptr_t unused) {
 
             // 指定位置までたどり着いたら状態遷移
             if( (cur_dis > target_dis)  && (grid_count < (GRID_NUM-1)) ) {
+                last_dir = cur_dir;
+                
                 //motorをストップ
                 ev3_motor_stop(left_motor, true);
                 ev3_motor_stop(right_motor, true);
@@ -118,14 +129,7 @@ void grid_task(intptr_t unused) {
                 // 現在位置座標を更新
                 cur_gridX = target_grid[grid_count].gridX;
                 cur_gridY = target_grid[grid_count].gridY;
-                /* 計測器情報のリセット */
-                //一旦オドメトリタスクをストップ&待ち
-                stp_cyc(ODOMETRY_TASK_CYC);
-                wait_msec(50);
-                last_dir = cur_dir;
-                printf("last_dir = cur_dir = %lf\n", cur_dir);
-                // 距離値リセット
-                odom_Distance_reset();
+
                 // 次の座標までの方位,距離を格納する
                 grid_count++;
                 Grid_setDistance(cur_gridX, cur_gridY, target_grid[grid_count].gridX, target_grid[grid_count].gridY);
@@ -133,12 +137,25 @@ void grid_task(intptr_t unused) {
                 target_dis = Grid_getDistance();
                 target_dir = Grid_getDirection();
 
+                /* 計測器情報のリセット */
+                /*
+                //一旦オドメトリタスクをストップ&待ち
+                stp_cyc(ODOMETRY_TASK_CYC);
+                wait_msec(50);
+                //last_dir = cur_dir;
+                //printf("last_dir = cur_dir = %lf\n", cur_dir);
+                // 距離値リセット
+                odom_Distance_reset();
+
                 // 再度,次座標への旋回を開始
-                state = TURN;
                 sta_cyc(ODOMETRY_TASK_CYC);
                 //odom_Direction_setDirection(last_dir);//←これこのタイミングでいい？
                 direction = last_dir;
                 wait_msec(50);
+                */
+                odom_Distance_resetSync(last_dir);//↑/**/関数化
+                
+                state = TURN;
                 printf("state = TURN\n");
             } else
                 if( (cur_dis > target_dis) && (grid_count >= (GRID_NUM-1)) ) {
@@ -204,4 +221,18 @@ void Grid_noiseXY_calc() {
     noiseX = grid_distanceX - odom_Coordinate_getnoiseX();
     noiseY = grid_distanceY - odom_Coordinate_getnoiseY();
 }
- 
+
+void Grid_setMotorBias(){
+    if(fabsf(angle_diff) < 5){
+        bias = 0;
+    }
+    else{
+        if(angle_diff>=0){
+            bias = -5;
+        }
+        else{
+            bias = 5;
+        }
+    }
+    printf("angle_diff=%lf, bias=%d\n", angle_diff, bias);
+}
