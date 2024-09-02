@@ -124,6 +124,6 @@ void tracer_task(intptr_t unused) {
     printf("edge=%s, \n",edge_table[*edge_state].current_edge);           /* エッジ状態の表示 */
 }
 
-float Direction_calc(){
+float incideDirection_calc(){
     return arccos(20.0/odom_Distance_getDistance());
 }
