@@ -27,6 +27,7 @@ void Grid_setDirection(int aX, int aY, int bX, int bY);
 float Grid_getDirection();
 
 void Grid_noiseXY_calc();
+void Grid_setMotorBias();
 
 #ifdef __cplusplus
 }
