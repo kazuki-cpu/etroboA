@@ -94,7 +94,9 @@ void odom_Direction_reset(){
     ev3_motor_reset_counts(left_motor);
     ev3_motor_reset_counts(right_motor);
     direction = 0.0;
-    
+    distanceR = 0.0;
+    distanceL = 0.0;
+    wait_msec(100);
     //モータ角度の過去値に現在値を代入
     pre_angleL = ev3_motor_get_counts(left_motor);
     pre_angleR = ev3_motor_get_counts(right_motor); 
