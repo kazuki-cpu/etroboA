@@ -225,8 +225,9 @@ float Grid_getDirection() {
 }
 
 void Grid_noiseXY_calc() {
-    noiseX = grid_distanceX - odom_Coordinate_getnoiseX();
-    noiseY = grid_distanceY - odom_Coordinate_getnoiseY();
+    ODOM_XY cur_coordinate = odom_Coordinate_getCoordinate();
+    noiseX = grid_distanceX - cur_coordinate.x;
+    noiseY = grid_distanceY - cur_coordinate.y;
 }
 
 void Grid_setBias(){
