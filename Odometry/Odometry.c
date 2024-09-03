@@ -161,7 +161,7 @@ void odom_Distance_resetSync(float handover_dir){
     
     // 距離値リセット
     odom_Distance_reset();
-
+    wait_msec(100);
     // 再度,オドメトリタスク開始
     sta_cyc(ODOMETRY_TASK_CYC);
     odom_Direction_setDirection(handover_dir);
@@ -173,7 +173,7 @@ void odom_Direction_resetSync(float handover_dir){
     stp_cyc(ODOMETRY_TASK_CYC);
     wait_msec(50);
     odom_Direction_reset();
-    wait_msec(50);
+    wait_msec(100);
 
     //最後の方位を代入＆オドメトリタスク再開
     odom_Direction_setDirection(handover_dir);
