@@ -142,7 +142,7 @@ void grid_task(intptr_t unused) {
                 Grid_setDirection(cur_gridX, cur_gridY, target_grid[grid_count].gridX, target_grid[grid_count].gridY);
                 target_dis = Grid_getDistance();
                 target_dir = Grid_getDirection();
-
+                
                 /* 計測器情報のリセット */
                 /*
                 //一旦オドメトリタスクをストップ&待ち
@@ -160,7 +160,7 @@ void grid_task(intptr_t unused) {
                 wait_msec(50);
                 */
                 odom_Distance_resetSync(last_dir);//↑/**/関数化
-                
+                odom_Coordinate_reset();
                 state = TURN;
                 printf("state = TURN\n");
             } else
