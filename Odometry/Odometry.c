@@ -12,7 +12,7 @@ void odometry_task(intptr_t exinf){
     odom_Distance_update();
     odom_Direction_update();
     odom_Coordinate_update();
-    printf(", distance = %lf, direction= %lf\n", distance, direction);
+    printf(", distance = %lf, direction= %lf", distance, direction);
 }
 /*
 void odom_init(){
@@ -140,6 +140,7 @@ ODOM_XY odom_Coordinate_update(){
         coordinate.x += distance_dt * cos(direction + 180);
         coordinate.y += distance_dt * sin(direction + 180);
     }
+    printf(", x = %lf, y= %lf\n", coordinate.x, coordinate.y);
 }
 
 /* 座標を設定 */
