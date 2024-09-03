@@ -10,8 +10,8 @@ extern "C" {
 #define TIRE_DIAMETER 100.0
 
 typedef struct{
-    int X;
-    int Y;
+    float x;
+    float y;
 }ODOM_XY;
 
 //public:
@@ -31,7 +31,7 @@ typedef struct{
   void odom_Coordinate_reset();
   void odom_Coordinate_getCoordinate();
   static ODOM_XY odom_Coordinate_update();
-  void odom_Direction_setCoordinate(float set_x, float set_y);
+  void odom_Coordinate_setXY(float set_x, float set_y);
   void odom_Distance_resetSync(float handover_dir);
   void odom_Direction_resetSync(float handover_dir);
 
