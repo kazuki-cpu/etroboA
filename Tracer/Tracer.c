@@ -42,7 +42,7 @@ void tracer_task(intptr_t unused) {
             ev3_motor_set_power(left_motor, 45 + bias);//53
             ev3_motor_set_power(right_motor, 45 - bias);
             //1000mm以上前進したら，次状態遷移
-            if(odom_Distance_getDistance() > 1000.0) {
+            if(odom_Distance_getDistance() > 500.0) {
                 state = END;
             }
             break;
