@@ -185,6 +185,8 @@ void grid_task(intptr_t unused) {
 void Grid_init() {
     //grid_distance = 0.0;
     //grid_direction = 0.0;
+    noiseX = 0.0;
+    noiseY = 0.0;    
     Grid_setDistance(cur_gridX, cur_gridY, target_grid[grid_count].gridX, target_grid[grid_count].gridY);
     Grid_setDirection(cur_gridX, cur_gridY, target_grid[grid_count].gridX, target_grid[grid_count].gridY);
     target_dis = Grid_getDistance();
@@ -211,7 +213,7 @@ void Grid_setDirection(int aX, int aY, int bX, int bY) {//これRコースのarc
 
     //　座標aから座標bへの方位（ラジアン）を取得
     //targetDir = atan2((float)(bY-aY), (float)(bX-aX));
-    targetDir = atan2(grid_distanceX * edge - noiseX, grid_distanceY - noiseY);
+    targetDir = atan2(grid_distanceY * edge - noiseY, grid_distanceX - noiseX);
     //ラジアンから度に変換
     targetDir = targetDir * 180.0 / PI;
 
