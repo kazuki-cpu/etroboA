@@ -32,6 +32,7 @@ typedef struct{
   ODOM_XY odom_Coordinate_getCoordinate();
   static void odom_Coordinate_update();
   void odom_Coordinate_setXY(float set_x, float set_y);
+  void odom_Coordinate_reset();
   void odom_Distance_resetSync(float handover_dir);
   void odom_Direction_resetSync(float handover_dir);
 
