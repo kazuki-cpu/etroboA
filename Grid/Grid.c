@@ -196,7 +196,7 @@ void Grid_setDistance(int aX, int aY, int bX, int bY) {
     //grid_distance = sqrt( pow((float)(bX-aX),2) + pow((float)(bY-aY),2) ) *  GRID_SIZE;
     grid_distanceX = (float)(bX-aX)* GRID_SIZE - noiseX; 
     grid_distanceY = (float)(bY-aY)* GRID_SIZE - noiseY;
-    grid_distance = sqrt( pow(grid_distanceX,2) + pow((grid_distanceY,2));
+    grid_distance = sqrt( pow(grid_distanceX,2) + pow(grid_distanceY,2));
 }
 
 /* 座標aから座標bまでの移動距離を取得する関数 */
