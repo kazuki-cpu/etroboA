@@ -178,7 +178,7 @@ void odom_Direction_resetSync(float handover_dir){
     wait_msec(1000);
     
     odom_Direction_reset();
-    //wait_msec(1000);
+    wait_msec(1000);
 
     //最後の方位を代入＆オドメトリタスク再開
     odom_Direction_setDirection(handover_dir);
