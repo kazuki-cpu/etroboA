@@ -138,12 +138,12 @@ ODOM_XY odom_Coordinate_getCoordinate(){
 /*座標更新*/
 void odom_Coordinate_update(){
     if(distance_dt >= 0){
-        coordinate.x += distance_dt * cos(direction);
-        coordinate.y += distance_dt * sin(direction);
+        coordinate.x += distance_dt * cos(direction_rad);
+        coordinate.y += distance_dt * sin(direction_rad);
     }
     else{
-        coordinate.x += distance_dt * cos(direction + 180);
-        coordinate.y += distance_dt * sin(direction + 180);
+        coordinate.x += distance_dt * cos(direction_rad + PI);
+        coordinate.y += distance_dt * sin(direction_rad + PI);
     }
     printf(", x = %lf, y= %lf", coordinate.x, coordinate.y);
 }
