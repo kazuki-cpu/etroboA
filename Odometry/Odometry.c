@@ -3,6 +3,7 @@
 #include "app.h"
 #include "Odometry.h"
 #include "ev3api.h"
+#include "math.h"
 //using namespace ev3api;
 
 float angle_diff;
@@ -12,7 +13,7 @@ void odometry_task(intptr_t exinf){
     odom_Distance_update();
     odom_Direction_update();
     odom_Coordinate_update();
-    printf(", distance = %lf, direction= %lf\n", distance, direction);
+    printf(", distance_dt = %lf, distance = %lf, direction= %lf", distance_dt, distance, direction);
 }
 /*
 void odom_init(){
@@ -131,7 +132,7 @@ void odom_Coordinate_getCoordinate(){
 }
 
 /*座標更新*/
-void odom_Coordinate_update(){
+ODOM_XY odom_Coordinate_update(){
     if(distance_dt >= 0){
         coordinate.x += distance_dt * cos(direction);
         coordinate.y += distance_dt * sin(direction);
@@ -140,12 +141,13 @@ void odom_Coordinate_update(){
         coordinate.x += distance_dt * cos(direction + 180);
         coordinate.y += distance_dt * sin(direction + 180);
     }
+    printf(", x = %lf, y= %lf", coordinate.x, coordinate.y);
 }
 
 /* 座標を設定 */
 void odom_Coordinate_setXY(float set_x, float set_y){
-    coordinate.X = set_x;
-    coordinate.Y = set_y;
+    coordinate.x = set_x;
+    coordinate.y = set_y;
 }
 
 void odom_Distance_resetSync(float handover_dir){   
@@ -162,7 +164,7 @@ void odom_Distance_resetSync(float handover_dir){
     wait_msec(50);
 }
 
-void odom_Direction_resetSync(handover_dir){
+void odom_Direction_resetSync(float handover_dir){
     //一旦オドメトリタスクをストップ&待ち
     stp_cyc(ODOMETRY_TASK_CYC);
     wait_msec(50);
@@ -173,3 +175,4 @@ void odom_Direction_resetSync(handover_dir){
     odom_Direction_setDirection(handover_dir);
     sta_cyc(ODOMETRY_TASK_CYC);
 }
+
