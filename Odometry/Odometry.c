@@ -90,7 +90,7 @@ float odom_Distance_getDistanceLeft(){
 
 /* 方位リセット */
 void odom_Direction_reset(){
-    direction_deg = 0.0;
+    direction = 0.0;
     
     ev3_motor_reset_counts(left_motor);
     ev3_motor_reset_counts(right_motor);
