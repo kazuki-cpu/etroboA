@@ -13,7 +13,7 @@ void odometry_task(intptr_t exinf){
     odom_Distance_update();
     odom_Direction_update();
     odom_Coordinate_update();
-    printf(", distance = %lf, direction= %lf", distance, direction);
+    printf(", distance_dt = %lf, distance = %lf, direction= %lf", distance_dt, distance, direction);
 }
 /*
 void odom_init(){
