@@ -10,8 +10,8 @@ extern "C" {
 #define TIRE_DIAMETER 100.0
 
 typedef struct{
-    int X;
-    int Y;
+    int x;
+    int y;
 }ODOM_XY;
 
 //public:
