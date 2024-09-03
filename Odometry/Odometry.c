@@ -141,7 +141,7 @@ ODOM_XY odom_Coordinate_update(){
         coordinate.x += distance_dt * cos(direction + 180);
         coordinate.y += distance_dt * sin(direction + 180);
     }
-    printf(", x = %lf, y= %lf\n", coordinate.x, coordinate.y);
+    printf(", x = %lf, y= %lf", coordinate.x, coordinate.y);
 }
 
 /* 座標を設定 */
