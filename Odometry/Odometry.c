@@ -127,12 +127,12 @@ void odom_Coordinate_reset(){
 }
 
 /*座標取得*/
-void odom_Coordinate_getCoordinate(){
+ODOM_XY odom_Coordinate_getCoordinate(){
     return coordinate;
 }
 
 /*座標更新*/
-ODOM_XY odom_Coordinate_update(){
+void odom_Coordinate_update(){
     if(distance_dt >= 0){
         coordinate.x += distance_dt * cos(direction);
         coordinate.y += distance_dt * sin(direction);
