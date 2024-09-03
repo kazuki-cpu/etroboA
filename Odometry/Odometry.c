@@ -157,37 +157,37 @@ void odom_Coordinate_setXY(float set_x, float set_y){
 void odom_Distance_resetSync(float handover_dir){   
     //一旦オドメトリタスクをストップ&待ち
     stp_cyc(ODOMETRY_TASK_CYC);
-    wait_msec(1000);
+    //wait_msec(1000);
     
     // 距離値リセット
     odom_Distance_reset();
-    wait_msec(1000);
+    //wait_msec(1000);
     
     // 再度,オドメトリタスク開始
     odom_Direction_setDirection(handover_dir);
-    wait_msec(1000);
+    //wait_msec(1000);
     sta_cyc(ODOMETRY_TASK_CYC);
-    wait_msec(1000);
+    //wait_msec(1000);
     odom_Direction_setDirection(handover_dir);
-    wait_msec(1000);
+    //wait_msec(1000);
 }
 
 void odom_Direction_resetSync(float handover_dir){
     //一旦オドメトリタスクをストップ&待ち
     stp_cyc(ODOMETRY_TASK_CYC);
-    wait_msec(1000);
+    //wait_msec(1000);
     
     odom_Direction_reset();
-    wait_msec(1000);
+    //wait_msec(1000);
 
     //最後の方位を代入＆オドメトリタスク再開
     odom_Direction_setDirection(handover_dir);
-    wait_msec(1000);
+    //wait_msec(1000);
     
     sta_cyc(ODOMETRY_TASK_CYC);
-    wait_msec(1000);
+    //wait_msec(1000);
 
     odom_Direction_setDirection(handover_dir);
-    wait_msec(1000);
+    //wait_msec(1000);
 }
 
