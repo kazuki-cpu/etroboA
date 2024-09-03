@@ -8,6 +8,7 @@
 
 float angle_diff;
 float direction;
+float direction_rad;
 
 void odometry_task(intptr_t exinf){
     odom_Distance_update();
