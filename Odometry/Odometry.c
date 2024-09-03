@@ -154,6 +154,11 @@ void odom_Coordinate_setXY(float set_x, float set_y){
     coordinate.y = set_y;
 }
 
+void odom_Coordinate_reset(){
+    coordinate.x = 0.0;
+    coordinate.y = 0.0;
+}
+
 void odom_Distance_resetSync(float handover_dir){   
     //一旦オドメトリタスクをストップ&待ち
     stp_cyc(ODOMETRY_TASK_CYC);
