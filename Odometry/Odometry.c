@@ -143,7 +143,7 @@ ODOM_XY odom_Coordinate_update(){
 }
 
 /* 座標を設定 */
-void odom_Direction_setDirection(float set_x, float set_y){
+void odom_Coordinate_setXY(float set_x, float set_y){
     coordinate.x = set_x;
     coordinate.y = set_y;
 }
