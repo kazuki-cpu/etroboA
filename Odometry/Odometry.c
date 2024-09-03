@@ -3,6 +3,7 @@
 #include "app.h"
 #include "Odometry.h"
 #include "ev3api.h"
+#include "math.h"
 //using namespace ev3api;
 
 float angle_diff;
