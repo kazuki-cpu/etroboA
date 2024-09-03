@@ -19,99 +19,78 @@ extern float angle_diff;
 
 void tracer_task(intptr_t unused) {
     color_update();
-    
-    /* 計測器初期化 */
-
-    if(fabsf(angle_diff) < 5){
-            bias = 0;
-        }
-        else{
-            if(angle_diff>=0){
-                bias = -5;
-            }
-            else{
-                bias = 5;
-            }
-        }
+    Grid_setBias();
     
     switch(target) {        
         case WHITE:
             int16_t v = color_get_v();
             int16_t v_ave = color_get_v_ave();
-            if(v > v_ave) {
-                target = BLACK;
-            }
-            else{
-                ev3_motor_set_power(left_motor, -53 - bias);
-                ev3_motor_set_power(right_motor, 53 + bias);
-            }
+            /*エッジ外側の白を検知するまで旋回、白検知したらエッジの黒検知(DETECT_TARGET = BLACK)移行*/
+                if(v > v_ave) {
+                    target = BLACK;
+                }
+                else{
+                    Grid_steerTurn_P();
+                }
             break;
         case BLACK:
-            if(v < v_ave) {;
-                target = EDGE;
-                sta_cyc(ODOMETRY_TASK_CYC);
-            }
-            else{
-                ev3_motor_set_power(left_motor, 53 + bias);
-                ev3_motor_set_power(right_motor, -53 - bias);
-            }
+            int16_t v = color_get_v();
+            int16_t v_ave = color_get_v_ave();
+            
+            /*エッジの黒検知するまで旋回、黒検知したらエッジ斜め横断(DETECT_TARGET = EDGE)移行。この時カラーセンサーの座標を(-1,0)としてオドメトリリセット*/
+                if(v < v_ave) {;
+                    target = EDGE;
+                    odom_Distance_resetSync(0.0);
+                }
+                else{
+                    Grid_steerTurn_N();
+                }
             break;
         case EDGE:
-            if(v > v_ave) {
-                target = MIDDLE;
-                ev3_motor_stop(left_motor, true);
-                ev3_motor_stop(right_motor, true);
-                stp_cyc(ODOMETRY_TASK_CYC);
-                float detected_dir = Direction_calc();
-                odom_Direction_setDirection(detected_dir);
-                sta_cyc(ODOMETRY_TASK_CYC);
-            }
-            else{
-                ev3_motor_set_power(left_motor, 45 + bias);
-                ev3_motor_set_power(right_motor, 45 - bias);
-            }
+            int16_t v = color_get_v();
+            int16_t v_ave = color_get_v_ave();
+            /*逆エッジ超えた白検知するまで直進、白検知したら入射角と座標現在の推定し次の状態に移行*/
+                if(v > v_ave) {
+                    target = MIDDLE;
+                    Grid_steerStop();
+                    //入射方位(現在のロボット方位)の推定
+                    float incide_dis = odom_Distance_getDistance();
+                    float incide_dir = incideDirection_calc(incide_dis, 20);
+                    odom_Direction_setDirection(incide_dir);
+                    //現在のロボット座標の推定
+                    incide_dis - ;
+                }
+                else{
+                    Grid_steerAhead();
+                }
             break;
-        case MIDDLE:                             /* 青線走行状態 */
+        case MIDDLE:
             if(odom_Direction_getDirection() < 90.0) {
-                ev3_motor_set_power(left_motor, -53 - bias);
-                ev3_motor_set_power(right_motor, 53 + bias);
-            } else {
-                ev3_motor_set_power(left_motor, 53 + bias);
-                ev3_motor_set_power(right_motor, -53 - bias);
+                Grid_steerTurn_P();
+            } 
+            else {
+                Grid_steerTurn_N();
             }
+            
             // 指定方位の一定範囲内に収まったら,移動開始
             if( (odom_Direction_getDirection() > (89.0)) && (odom_Direction_getDirection() < (91.0)) ) {;
-                //motorをストップ
-                ev3_motor_stop(left_motor, true);
-                ev3_motor_stop(right_motor, true);
-                //一旦オドメトリタスクをストップ&待ち
-                stp_cyc(ODOMETRY_TASK_CYC);
-                wait_msec(50);
-                last_dir = cur_dir;
-                printf("last_dir = cur_dir = %lf\n", cur_dir);
-                
-                wait_msec(50);
-                state = MOVE;
-                //最後の方位を代入＆オドメトリタスク再開
-                odom_Direction_setDirection(last_dir);
-                sta_cyc(ODOMETRY_TASK_CYC);
-                                                                               
-                printf("state = MOVE\n");
+                target = BLUE;                                                                                                  
             }
             break;
-        case BLUE:                            /* 黒線走行状態 */
-            if(s > S_AVERAGE && v > V_DARK){       /* 青線を検知したら */
-                target = CENTER;             /* 次の走行状態に遷移 */
-            }
-            else{
-                white_count++;
-            }
+        case BLUE:       
+            int16_t s = color_get_s();
+            int16_t v = color_get_v();
+                if(s > S_AVERAGE && v > V_DARK){       /* 青を検知したら */
+                    target = CENTER;             /* 次の走行状態に遷移 */
+                    
+                }
+                else{
+                    Grid_steerAhead();
+                }
             break;
         case CENTER:
                if(white_count>10){
-                   bias_grid.gridX=;
-                   bias_grid.gridY=;
-                   diretion =
+            
                }
                else if(){
 
@@ -124,6 +103,7 @@ void tracer_task(intptr_t unused) {
     printf("edge=%s, \n",edge_table[*edge_state].current_edge);           /* エッジ状態の表示 */
 }
 
-float incideDirection_calc(){
-    return arccos(20.0/odom_Distance_getDistance());
+float incideDirection_calc(float hypotenuse, float neighbor){
+    //return arccos(20.0/odom_Distance_getDistance());
+    return arccos(neighbor/hypotenuse);
 }
