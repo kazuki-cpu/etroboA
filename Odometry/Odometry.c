@@ -128,6 +128,8 @@ void odom_Coordinate_reset(){
     //モータ角度の過去値に現在値を代入
     pre_angleL = ev3_motor_get_counts(left_motor);
     pre_angleR = ev3_motor_get_counts(right_motor);
+    pre_angleL = 0.0;
+    pre_angleR = 0.0;
 }
 
 /*座標取得*/
