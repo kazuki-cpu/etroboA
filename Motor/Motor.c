@@ -1,5 +1,6 @@
+#pragma once
 #include "app.h"
-#include "LineTracer_conf.h"
+#include "LineTracer.h"
 
 int edge = 1;
 int rot_max = 50;
