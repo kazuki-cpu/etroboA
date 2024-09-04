@@ -119,8 +119,6 @@ void tracer_task(intptr_t unused) {
         default:
             break;
     }
-    printf("scene=%s, ",scene_param[*scene_state].current_scene);     /* シーン状態の表示 */
-    printf("edge=%s, \n",edge_table[*edge_state].current_edge);           /* エッジ状態の表示 */
 }
 
 float incideDirection_calc(float hypotenuse, float neighbor){
