@@ -88,9 +88,8 @@ void tracer_task(intptr_t unused) {
             
                 if(s > S_AVERAGE && v > V_DARK){       /* 青を検知したら */
                     target = CENTERLINE;             /* 次の走行状態に遷移 */
-                    float x = odom_Coordinate_getX();
-                    float y = odom_Coordinate_getY();
-                    target_dir = incideDirection_calc(50.0, -X);
+                    ODOM_XY cur_coordinate = odom_Coordinate_getCoordinate();
+                    target_dir = incideDirection_calc(50.0, -cur_coordinate.x);
                 }
                 else{
                     Grid_steerAhead();
