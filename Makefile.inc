@@ -5,6 +5,7 @@ APPL_COBJS +=\
 	Calibration.o\
 	Tracer.o\
 	Odometry.o\
+	Grid.o\
 
 APPL_LIBS += -lm
 
@@ -13,6 +14,7 @@ APPL_DIRS +=\
 	$(mkfile_path)Calibration\
 	$(mkfile_path)Tracer\
 	$(mkfile_path)Odometry\
+	$(mkfile_path)Grid\
 
 
 INCLUDES += \
@@ -20,3 +22,4 @@ INCLUDES += \
 	-I$(mkfile_path)Calibration\
 	-I$(mkfile_path)Tracer\
 	-I$(mkfile_path)Odometry\
+	-I$(mkfile_path)Grid\
