@@ -1,3 +1,4 @@
+#pragma once
 #include "app.h"
 #include "LineTracer.h"
 #include "LineTracer_conf.h"
