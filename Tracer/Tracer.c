@@ -92,8 +92,8 @@ void tracer_task(intptr_t unused) {
                     float y = odom_Coordinate_getY();
                     target_dir = incideDirection_calc(50.0, -X);
                 }
-                else{
-                    Grid_steerAhead();
+                else{
+                    Grid_steerAhead();
                 }
             break;
         case CENTERLINE:
