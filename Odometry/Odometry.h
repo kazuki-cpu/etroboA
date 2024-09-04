@@ -1,68 +1,15 @@
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include "ev3api.h"
-//using namespace ev3api;
 /* 円周率 */
 #define PI 3.14159265358
-#define TREAD 127.0
-#define TIRE_DIAMETER 100.0
+#define TREAD 50
+#define TIRE_DIAMETER 0.81
 
-typedef struct{
-    float x;
-    float y;
-}ODOM_XY;
-
-//public:
-  void odom_init(); //コンストラクタ
-
+  void odom_print_distance();
   void odom_terminate();
-  void motor_control(int left_motor_power, int right_motor_power);
   void odom_Distance_reset();
-  static void odom_Distance_update();
+  void odom_Distance_update();
   float odom_Distance_getDistance();
-  static float odom_Distance_getDistanceRight();
-  static float odom_Distance_getDistanceLeft();
+  float odom_Distance_getDistanceRight();
+  float odom_Distance_getDistanceLeft();
   void odom_Direction_reset();
   float odom_Direction_getDirection();
-  static void odom_Direction_update();
-  void odom_Direction_setDirection(float set_dir);
-  void odom_Coordinate_reset();
-  ODOM_XY odom_Coordinate_getCoordinate();
-  static void odom_Coordinate_update();
-  void odom_Coordinate_setXY(float set_x, float set_y);
-  void odom_Distance_resetSync(float handover_dir);
-  void odom_Direction_resetSync(float handover_dir);
-
-/* モーターポートの定義 */
-/*motor_port_t
-    arm_motor,
-    left_motor,
-    right_motor;
-*/
-
-   static float distance;
-   static float distance_dt;
-   static float distanceR;
-   static float distanceL;
-   //static float cur_angleL;
-   //static float cur_angleR;
-   static float pre_angleL;
-   static float pre_angleR;
-   //extern float direction; //現在の方位
-   static ODOM_XY coordinate;
-
-//private:
-
-/*
-#ifndef MAKE_RASPIKE
-  const int8_t pwm = (Motor::PWM_MAX) / 6;
-#else
-  const int8_t pwm = 60;
-#endif
-*/
-
-#ifdef __cplusplus
-}
-#endif
+  void odom_Direction_update();
