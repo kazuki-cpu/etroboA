@@ -151,7 +151,13 @@ void tracer_steering(enum SCENE_STATE scene_state){
     /* モーター制御 */
     motor_set_edge(edge);
     motor_set_range(rot_max);
+    
+    if(trace_mode==EDGE_IN||EDGE_OUT){
+        motor_set_power(trace_mode, edge);
+    }
+    else{
     motor_set_power(base_speed, rotation);
+    }
 
 }
 
