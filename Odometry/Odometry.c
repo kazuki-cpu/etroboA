@@ -146,8 +146,8 @@ void odom_Coordinate_update(){
         coordinate.y += distance_dt * sin(direction_rad);
     }
     else{
-        coordinate.x += distance_dt * cos(direction_rad + PI);
-        coordinate.y += distance_dt * sin(direction_rad + PI);
+        coordinate.x += -1 * distance_dt * cos(direction_rad + PI);
+        coordinate.y += -1 * distance_dt * sin(direction_rad + PI);
     }
     printf(", x = %lf, y= %lf", coordinate.x, coordinate.y);
 }
@@ -172,7 +172,7 @@ void odom_Distance_resetSync(float handover_dir){
     //wait_msec(1000);
     sta_cyc(ODOMETRY_TASK_CYC);
     //wait_msec(1000);
-    odom_Direction_setDirection(handover_dir);
+    //odom_Direction_setDirection(handover_dir);
     //wait_msec(1000);
 }
 
@@ -191,7 +191,7 @@ void odom_Direction_resetSync(float handover_dir){
     sta_cyc(ODOMETRY_TASK_CYC);
     //wait_msec(1000);
 
-    odom_Direction_setDirection(handover_dir);
+    //odom_Direction_setDirection(handover_dir);
     //wait_msec(1000);
 }
 
