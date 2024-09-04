@@ -1,3 +1,4 @@
+#pragma once
 #include "app.h"
 #include "Calibration.h"
 #include "Color.h"
