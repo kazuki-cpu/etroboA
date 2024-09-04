@@ -1,6 +1,6 @@
 #include "app.h"
 #include "LineTracer.h"
-#include "Debri.h"
+//#include "Debri.h"
 #include "Manager.h"
 #include "Odometry.h"
 #include "Color.h"
@@ -11,7 +11,7 @@ void start_manager(enum MANAGE_STATE manage_state_ref){
     manage_state = manage_state_ref;
     switch(manage_state){
         case TRACER:    tracer_init(true);  break;
-        case DEBRI:     debri_init(true);   break;
+        //case DEBRI:     debri_init(true);   break;
         case CARRY:     break;
         case PARKING:   break;
         default:break;
@@ -31,7 +31,7 @@ void manager_task(intptr_t unused) {
 
     switch(manage_state){
         case TRACER:    transition_flg = tracer_10ms_cycle();   break;
-        case DEBRI:     transition_flg = debri();    break;
+        //case DEBRI:     transition_flg = debri();    break;
         case CARRY:     break;
         case PARKING:   break;
         default:break;
