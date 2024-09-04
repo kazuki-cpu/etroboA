@@ -1,0 +1,38 @@
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "math.h"
+
+static int cur_gridX = 0; // 現在位置座標のX値
+static int cur_gridY = 0; // 現在位置座標のY値
+static float target_dir = 0.0; // 現在位置座標から目標座標までの距離
+static float target_dis = 0.0; // 現在位置座標から目標座標までの方位
+static float cur_dir = 0.0; // 方位計の現在値
+static float cur_dis = 0.0; // 距離計の現在値
+static int grid_count = 0;  // 目標座標構造体への参照カウンタ
+static float noiseX;
+static float noiseY;
+
+/* 初期化関数 */
+void Grid_init();
+/* 座標aから座標bまでの移動距離を設定する関数 */
+void Grid_setDistance(int aX, int aY, int bX, int bY);
+/* 座標aから座標bまでの移動距離を取得する関数 */
+float Grid_getDistance();
+
+/* 目標座標の方位を設定する関数 */
+void Grid_setDirection(int aX, int aY, int bX, int bY);
+/* 目標座標の方位を取得する関数 */
+float Grid_getDirection();
+
+void Grid_noiseXY_calc();
+void Grid_setMotorBias();
+void Grid_steerAhead();
+void Grid_steerTurn_P(); 
+void Grid_steerTurn_N();  
+void Grid_steerStop();  
+
+#ifdef __cplusplus
+}
+#endif
