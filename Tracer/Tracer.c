@@ -5,7 +5,7 @@
 #include "Odometry.h"
 #include "Tracer.h"
 
-SENSOR_COORDINATE_DIFF 30 //カラーセンサーと車輪軸までの距離
+#define SENSOR_COORDINATE_DIFF 40 //カラーセンサーと車輪軸までの距離
 
 typedef enum {
     WHITE,
@@ -110,7 +110,7 @@ void tracer_task(intptr_t unused) {
                 odom_Distance_resetSync(cur_dir);
             }      
             break;
-        case CENTER
+        case CENTER:
             Grid_steerAhead();
             if( (cur_dis > target_dis) {
                 Grid_steerStop();//task終了
