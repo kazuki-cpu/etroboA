@@ -39,7 +39,7 @@ void tracer_task(intptr_t unused) {
             break;
         case BLACK:   /*エッジの黒検知するまで旋回、黒検知したらエッジ斜め横断(DETECT_TARGET = EDGE)移行。この時カラーセンサーの座標を(-1,0)としてオドメトリリセット*/
 
-                if(v < v_ave) {;
+                if(v < v_ave) {
                     target = EDGE;
                     odom_Distance_resetSync(0.0);
                 }
@@ -74,7 +74,7 @@ void tracer_task(intptr_t unused) {
             }
             
             // 指定方位の一定範囲内に収まったら,移動開始
-            if( (odom_Direction_getDirection() > (89.0)) && (odom_Direction_getDirection() < (91.0)) ) {;
+            if( (odom_Direction_getDirection() > (89.0)) && (odom_Direction_getDirection() < (91.0)) ) {
                 target = BLUE;                                                                                                  
             }
             break;
@@ -104,7 +104,7 @@ void tracer_task(intptr_t unused) {
             break;
         case CENTER:
             Grid_steerAhead();
-            if( (cur_dis > target_dis) {
+            if(cur_dis > target_dis){
                 Grid_steerStop();//task終了
             }
             break;
