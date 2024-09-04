@@ -1,77 +1,42 @@
-#pragma once
-
 #include "app.h"
 #include "Odometry.h"
-#include "ev3api.h"
-#include "math.h"
-//using namespace ev3api;
 
-float angle_diff;
-float direction;
-float direction_rad;
-
-void odometry_task(intptr_t exinf){
-    odom_Distance_update();
-    odom_Direction_update();
-    odom_Coordinate_update();
-    printf(", distance_dt = %lf, distance = %lf, direction= %lf", distance_dt, distance, direction);
-}
-/*
-void odom_init(){
-    arm_motor       = EV3_PORT_A;
-    left_motor      = EV3_PORT_C;
-    right_motor     = EV3_PORT_B;
-    ev3_motor_config(arm_motor     ,LARGE_MOTOR);
-    ev3_motor_config(left_motor    ,MEDIUM_MOTOR);
-    ev3_motor_config(right_motor   ,MEDIUM_MOTOR);
-}
-*/
-void odom_terminate(){
-   ev3_motor_set_power(left_motor, 0);
-   ev3_motor_set_power(right_motor, 0);
-}
-
-void motor_control(int left_motor_power, int right_motor_power) {    
-   ev3_motor_set_power(left_motor, left_motor_power);
-   ev3_motor_set_power(right_motor, right_motor_power);
-   return;
-}
+float distance;
+float distanceR;
+float distanceL;
+float pre_angleL;
+float pre_angleR;
+float distance;
+float direction; //現在の方位
 
 /* 初期化関数 */
 void odom_Distance_reset(){
     //各変数の値の初期化
-    ev3_motor_reset_counts(left_motor);
-    ev3_motor_reset_counts(right_motor);
     distance = 0.0;
     distanceR = 0.0;
     distanceL = 0.0;
-    wait_msec(100);
     //モータ角度の過去値に現在値を代入
     pre_angleL = ev3_motor_get_counts(left_motor);
     pre_angleR = ev3_motor_get_counts(right_motor);
-    
 }
 
-/* 距離更新(4ms間の移動距離を毎回加算している) */
+/* 距離更新(10ms間の移動距離を毎回加算している) */
 void odom_Distance_update(){
     float cur_angleL = ev3_motor_get_counts(left_motor); //左モータ回転角度の現在値
     float cur_angleR = ev3_motor_get_counts(right_motor);//右モータ回転角度の現在値
-    float cur_angle_diff = fabsf(cur_angleL) - fabsf(cur_angleR); //Lが強いと正、Rが強いと負
-    angle_diff = cur_angle_diff; 
-    printf("cur_angleL = %lf, cur_angleR = %lf, pre_angleL = %lf, pre_angleR = %lf", cur_angleL, cur_angleR, pre_angleL, pre_angleR);
-    //float distance_dt = 0.0;
-    distance_dt = 0.0;//ローカル変数からodomメンバ関数へ
 
-    // 4ms間の走行距離 = ((円周率 * タイヤの直径) / 360) * (モータ角度過去値 - モータ角度現在値)
+    // 10ms間の走行距離 = ((円周率 * タイヤの直径) / 360) * (モータ角度過去値 - モータ角度現在値)
     distanceL = ((PI * TIRE_DIAMETER) / 360.0) * (cur_angleL - pre_angleL);  // 左モータ距離
     distanceR = ((PI * TIRE_DIAMETER) / 360.0) * (cur_angleR - pre_angleR);  // 右モータ距離
-    distance_dt = (distanceL + distanceR) / 2.0; //左右タイヤの走行距離を足して割る
-    distance += distance_dt;
-    
+    distance += (distanceL + distanceR) / 2.0; //左右タイヤの走行距離を足して割る
 
     //モータの回転角度の過去値を更新
     pre_angleL = cur_angleL;
     pre_angleR = cur_angleR;
+}
+
+void odom_print_distance(){
+    printf("dist=%.1lf, ",distance);
 }
 
 /* 走行距離を取得 */
@@ -79,27 +44,19 @@ float odom_Distance_getDistance(){
     return distance;
 }
 
-/* 右タイヤの4ms間の距離を取得 */
+/* 右タイヤの10ms間の距離を取得 */
 float odom_Distance_getDistanceRight(){
     return distanceR;
 }
 
-/* 左タイヤの4ms間の距離を取得 */
+/* 左タイヤの10ms間の距離を取得 */
 float odom_Distance_getDistanceLeft(){
     return distanceL;
 }
 
 /* 方位リセット */
 void odom_Direction_reset(){
-    ev3_motor_reset_counts(left_motor);
-    ev3_motor_reset_counts(right_motor);
     direction = 0.0;
-    distanceR = 0.0;
-    distanceL = 0.0;
-    wait_msec(100);
-    //モータ角度の過去値に現在値を代入
-    pre_angleL = ev3_motor_get_counts(left_motor);
-    pre_angleR = ev3_motor_get_counts(right_motor); 
 }
 
  /* 方位を取得(右旋回が正転) */
@@ -110,87 +67,5 @@ float odom_Direction_getDirection(){
 /* 方位を更新 */
 void odom_Direction_update(){
     //(360 / (2 * 円周率 * 車体トレッド幅)) * (右進行距離 - 左進行距離)
-    direction += (360.0 / (2.0 * PI * TREAD)) * (odom_Distance_getDistanceRight() - odom_Distance_getDistanceLeft());
-    direction_rad = (PI / 180) * direction;
-    
-}
-
-/* 方位を設定 */
-void odom_Direction_setDirection(float set_dir){
-    direction = set_dir;
-    printf("direction = %lf\n", direction);
-}
-
-/*座標リセット*/
-void odom_Coordinate_reset(){
-    coordinate.x = 0.0;
-    coordinate.y = 0.0;
-    ev3_motor_reset_counts(left_motor);
-    ev3_motor_reset_counts(right_motor);
-    //モータ角度の過去値に現在値を代入
-    pre_angleL = ev3_motor_get_counts(left_motor);
-    pre_angleR = ev3_motor_get_counts(right_motor);
-    pre_angleL = 0.0;
-    pre_angleR = 0.0;
-}
-
-/*座標取得*/
-ODOM_XY odom_Coordinate_getCoordinate(){
-    return coordinate;
-}
-
-/*座標更新*/
-void odom_Coordinate_update(){
-    if(distance_dt >= 0){
-        coordinate.x += distance_dt * cos(direction_rad);
-        coordinate.y += distance_dt * sin(direction_rad);
-    }
-    else{
-        coordinate.x += -1 * distance_dt * cos(direction_rad + PI);
-        coordinate.y += -1 * distance_dt * sin(direction_rad + PI);
-    }
-    printf(", x = %lf, y= %lf", coordinate.x, coordinate.y);
-}
-
-/* 座標を設定 */
-void odom_Coordinate_setXY(float set_x, float set_y){
-    coordinate.x = set_x;
-    coordinate.y = set_y;
-}
-
-void odom_Distance_resetSync(float handover_dir){   
-    //一旦オドメトリタスクをストップ&待ち
-    stp_cyc(ODOMETRY_TASK_CYC);
-    wait_msec(1000);
-    
-    // 距離値リセット
-    odom_Distance_reset();
-    //wait_msec(1000);
-    
-    // 再度,オドメトリタスク開始
-    odom_Direction_setDirection(handover_dir);
-    //wait_msec(1000);
-    sta_cyc(ODOMETRY_TASK_CYC);
-    //wait_msec(1000);
-    //odom_Direction_setDirection(handover_dir);
-    //wait_msec(1000);
-}
-
-void odom_Direction_resetSync(float handover_dir){
-    //一旦オドメトリタスクをストップ&待ち
-    stp_cyc(ODOMETRY_TASK_CYC);
-    wait_msec(1000);
-    
-    odom_Direction_reset();
-    wait_msec(1000);
-
-    //最後の方位を代入＆オドメトリタスク再開
-    odom_Direction_setDirection(handover_dir);
-    //wait_msec(1000);
-    
-    sta_cyc(ODOMETRY_TASK_CYC);
-    //wait_msec(1000);
-
-    //odom_Direction_setDirection(handover_dir);
-    //wait_msec(1000);
+    direction += (360.0 / (2.0 * PI * TREAD)) * (odom_Distance_getDistanceLeft() - odom_Distance_getDistanceRight());
 }
