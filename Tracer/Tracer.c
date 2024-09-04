@@ -23,12 +23,12 @@ extern float angle_diff;
 
 void tracer_task(intptr_t unused) {
     color_update();
+    int16_t v = color_get_v();
+    int16_t v_ave = color_get_v_ave();
     Grid_setBias();
     
     switch(target) {        
         case WHITE:   /*エッジ外側の白を検知するまで旋回、白検知したらエッジの黒検知(DETECT_TARGET = BLACK)移行*/
-            int16_t v = color_get_v();
-            int16_t v_ave = color_get_v_ave();
             
                 if(v > v_ave) {
                     target = BLACK;
@@ -38,8 +38,6 @@ void tracer_task(intptr_t unused) {
                 }
             break;
         case BLACK:   /*エッジの黒検知するまで旋回、黒検知したらエッジ斜め横断(DETECT_TARGET = EDGE)移行。この時カラーセンサーの座標を(-1,0)としてオドメトリリセット*/
-            int16_t v = color_get_v();
-            int16_t v_ave = color_get_v_ave();
 
                 if(v < v_ave) {;
                     target = EDGE;
@@ -50,8 +48,6 @@ void tracer_task(intptr_t unused) {
                 }
             break;
         case EDGE:   /*逆エッジ超えた白検知するまで直進、白検知したら入射角と座標現在の推定し次の状態に移行*/
-            int16_t v = color_get_v();
-            int16_t v_ave = color_get_v_ave();
 
                 if(v > v_ave) {
                     target = MIDDLE;
@@ -82,10 +78,7 @@ void tracer_task(intptr_t unused) {
                 target = BLUE;                                                                                                  
             }
             break;
-        case BLUE:
-            int16_t s = color_get_s();
-            int16_t v = color_get_v();
-            
+        case BLUE:            
                 if(s > S_AVERAGE && v > V_DARK){       /* 青を検知したら */
                     target = CENTERLINE;             /* 次の走行状態に遷移 */
                     ODOM_XY cur_coordinate = odom_Coordinate_getCoordinate();
