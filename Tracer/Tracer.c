@@ -82,7 +82,7 @@ void tracer_task(intptr_t unused) {
                 target = BLUE;                                                                                                  
             }
             break;
-        case BLUE:
+        case BLUE:
             int16_t s = color_get_s();
             int16_t v = color_get_v();
             
