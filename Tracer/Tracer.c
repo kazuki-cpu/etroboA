@@ -62,7 +62,7 @@ void tracer_task(intptr_t unused) {
                     odom_Direction_setDirection(incide_dir);
                     //現在のロボット座標の推定＆設定
                     float x = (incide_dis - SENSOR_COORDINATE_DIFF) * cos(incide_dir) - 1;
-                    float y = (incide_dis - SENSOR_COORDINATE_DIFF) * sin(incide_dir);
+                    float y = (incide_dis - SENSOR_COORDINATE_DIFF) * sin(incide_dir);
                     odom_Coordinate_setXY(x, y);
                 }
                 else{
@@ -82,7 +82,7 @@ void tracer_task(intptr_t unused) {
                 target = BLUE;                                                                                                  
             }
             break;
-        case BLUE:       
+        case BLUE:
             int16_t s = color_get_s();
             int16_t v = color_get_v();
             
