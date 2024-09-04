@@ -94,7 +94,7 @@ void tracer_task(intptr_t unused) {
                 }
                 else{
                     Grid_steerAhead();
-                }
+                }
             break;
         case CENTERLINE:
             // 指定方位まで旋回する
