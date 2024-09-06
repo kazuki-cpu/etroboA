@@ -213,7 +213,7 @@ void Grid_setDirection(int aX, int aY, int bX, int bY) {//これRコースのarc
 
     //　座標aから座標bへの方位（ラジアン）を取得
     //targetDir = atan2((float)(bY-aY), (float)(bX-aX));
-    targetDir = atan2(grid_distanceY * edge + noiseY, grid_distanceX + noiseX);
+    targetDir = atan2(grid_distanceY, grid_distanceX * edge);
     //ラジアンから度に変換
     targetDir = targetDir * 180.0 / PI;
 
