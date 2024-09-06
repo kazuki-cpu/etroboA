@@ -196,8 +196,8 @@ void Grid_init() {
 /* 座標aから座標bまでの移動距離を設定する関数 */
 void Grid_setDistance(int aX, int aY, int bX, int bY) {
     //grid_distance = sqrt( pow((float)(bX-aX),2) + pow((float)(bY-aY),2) ) *  GRID_SIZE;
-    grid_distanceX = (float)(bX-aX)* GRID_SIZE * edge - noiseX; 
-    grid_distanceY = (float)(bY-aY)* GRID_SIZE - noiseY;
+    grid_distanceX = (float)(bX-aX)* GRID_SIZE * edge + noiseX; 
+    grid_distanceY = (float)(bY-aY)* GRID_SIZE + noiseY;
     grid_distance = sqrt( pow(grid_distanceX,2) + pow(grid_distanceY,2));
 }
 
@@ -213,7 +213,7 @@ void Grid_setDirection(int aX, int aY, int bX, int bY) {//これRコースのarc
 
     //　座標aから座標bへの方位（ラジアン）を取得
     //targetDir = atan2((float)(bY-aY), (float)(bX-aX));
-    targetDir = atan2(grid_distanceY * edge - noiseY, grid_distanceX - noiseX);
+    targetDir = atan2(grid_distanceY * edge + noiseY, grid_distanceX + noiseX);
     //ラジアンから度に変換
     targetDir = targetDir * 180.0 / PI;
 
