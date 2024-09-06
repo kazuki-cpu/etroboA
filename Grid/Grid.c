@@ -91,7 +91,7 @@ void grid_task(intptr_t unused) {
                 Grid_steerTurn_N();
             }
             // 指定方位の一定範囲内に収まったら,移動開始
-            if( (cur_dir > (target_dir-1.0)) && (cur_dir < (target_dir+1.0)) ) {;
+            if( (cur_dir > (target_dir-0.5)) && (cur_dir < (target_dir+0.5)) ) {;
                 last_dir = cur_dir;
                                                                                
                 //motorをストップ
