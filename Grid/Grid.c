@@ -19,9 +19,11 @@
 #define _debug(x)
 #endif
 
+
 // 構造体に格納されている目標座標の数
 #define GRID_NUM 6
 #define GRID_SIZE 352.0 //座標のマス幅（352mm）
+#define GUADRANT 1 //Rコースは=1,Lコースは-1
 
 /**
  * Global variables
